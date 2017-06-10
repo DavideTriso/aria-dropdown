@@ -24,8 +24,6 @@
     }
   }
 
-
-
   //-----------------------------------------------
   //METHODS
   //-----------------------------------------------
@@ -41,7 +39,8 @@
       ddArray = [];
 
 
-    //Set IDs on dd button and dd collapse if not set
+    //Set IDs on dd, dd button and dd collapse if not set
+    setId(dropdown, 'dropdown_', count);
     setId(elements.ddBtn, 'dropdown__btn-', count);
     setId(elements.ddCollapse, 'dropdown__collapse-', count);
 
@@ -194,19 +193,19 @@
     } else {
       switch (userSettings) {
         case 'expand':
-          methods.expand($(this)[0], true);
+          methods.expand($(this), true);
           break;
         case 'collapse':
-          methods.collapse($(this)[0], true);
+          methods.collapse($(this), true);
           break;
         case 'show':
-          methods.expand($(this)[0], false);
+          methods.expand($(this), false);
           break;
         case 'hide':
-          methods.collapse($(this)[0], false);
+          methods.collapse($(this), false);
           break;
         case 'toggle':
-          methods.toggle($(this)[0], true);
+          methods.toggle($(this), true);
           break;
       }
     }
@@ -241,4 +240,8 @@ $(document).ready(function () {
     collapseOnOutsideClick: true,
     expandOnlyOne: false
   });
+  
+  $('#dropdown_1').ariaDropdown('expand');
+  
+  
 });
