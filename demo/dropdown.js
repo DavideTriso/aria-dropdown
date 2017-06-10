@@ -213,7 +213,6 @@
   };
 
   $.fn.ariaDropdown.defaultSettings = {
-    ddClass: 'dropdown',
     ddBtnClass: 'dropdown__btn',
     ddDismissBtnClass: 'dropdown__dismiss-btn',
     ddCollapseClass: 'dropdown__collapse',
@@ -228,6 +227,7 @@
     collapseZIndex: 1
   };
 }(jQuery));
+
 
 $(document).ready(function () {
   'use strict';

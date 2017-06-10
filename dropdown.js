@@ -214,7 +214,6 @@
   
   
   $.fn.ariaDropdown.defaultSettings = {
-    ddClass: 'dropdown',
     ddBtnClass: 'dropdown__btn',
     ddDismissBtnClass: 'dropdown__dismiss-btn',
     ddCollapseClass: 'dropdown__collapse',
