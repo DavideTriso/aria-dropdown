@@ -24,8 +24,8 @@
     }
   }
 
-  
-  
+
+
   //-----------------------------------------------
   //METHODS
   //-----------------------------------------------
@@ -204,16 +204,15 @@
           break;
         case 'hide':
           methods.collapse($(this)[0], false);
+          break;
         case 'toggle':
           methods.toggle($(this)[0], true);
+          break;
       }
     }
   };
 
-  
-  
-
-  $.fn.ariaDropdown.dSettings = {
+  $.fn.ariaDropdown.defaultSettings = {
     ddClass: 'dropdown',
     ddBtnClass: 'dropdown__btn',
     ddDismissBtnClass: 'dropdown__dismiss-btn',

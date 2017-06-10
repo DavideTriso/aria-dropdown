@@ -65,9 +65,3 @@ $('.dropdown').ariaDropdown({
 ```
 
 ## Custom event / triggering dropdown
-
-It is possible to expand/collapse a dropdown by triggering the 'dropdown:toggle' event on its button.
-
-```
-$('#dropdown-btn-2').trigger('dropdown:toggle');
-```
