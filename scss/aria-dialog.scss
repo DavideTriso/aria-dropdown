@@ -1,0 +1,118 @@
+//=============================
+//IMPORT
+//=============================
+@import 'breakpoints';
+@import '01_placeholders/import';
+@import '02_css-mixins/import';
+//=============================
+//VARAIBLES
+//=============================
+//Dimensions and general settings
+$ariaDialog--containerWidth: 15rem;
+$ariaDialog--containerPadding: 0.5rem;
+//Dialog Style
+$ariaDialog--color: #000;
+$ariaDialog--dialogBackgroundColor: rgba(42, 42, 42, 0.8);
+$ariaDialog--containerBackgroundColor: #fff;
+$ariaDialog--containerBorder: 0.1rem solid #b5b5b5;
+$ariaDialog--containerBorderRadius: 0;
+$ariaDialog--containerBoxShadow: 0 0 0.5rem 0px rgba(128, 128, 128, 0.5);
+//Dismiss button position
+$ariaDialog--dismissBtnTop: 0.3rem;
+$ariaDialog--dismissBtnRight: 0.3rem;
+//Alert dialog style
+$ariaDialog--alertColor: #efefef;
+$ariaDialog--containerAlertBackgroundColor: #ad0d0d;
+$ariaDialog--containerAlertBorder: 0.1rem solid #8d0909;
+$ariaDialog--containerAlertBorderRadius: 0;
+$ariaDialog--containerAlertBoxShadow: 0 0 0.5rem 0px rgba(145, 20, 20, 0.5);
+//=============================
+//CSS STYLES
+//=============================
+//-----------------------------
+//BLOCK
+//-----------------------------
+.dialog {
+  background-color: $ariaDialog--dialogBackgroundColor;
+  @extend %bottom-0;
+  color: $ariaDialog--color;
+  display: none; //do not change this rule!
+  @extend %left-0;
+  @extend %position-fixed;
+  @extend %right-0;
+  @extend %top-0;
+  @extend %width-100;
+} //do not change this rule!
+//-----------------------------
+//ELEMENTS
+//-----------------------------
+.dialog__wrapper {
+  left: 50%;
+  @extend %max-width-100;
+  @extend %position-fixed;
+  top: 50%;
+  @include translate(-50%, -50%);
+  width: $ariaDialog--containerWidth;
+} //do not change this rule!
+.dialog__container {
+  background-color: $ariaDialog--containerBackgroundColor;
+  @if $ariaDialog--containerBorder !='' {
+    border: $ariaDialog--containerBorder;
+  }
+  @if $ariaDialog--containerBorderRadius !='' {
+    border-radius: $ariaDialog--containerBorderRadius;
+  }
+  @include box-shadow($ariaDialog--containerBoxShadow);
+  padding: $ariaDialog--containerPadding;
+  position: relative; //do not change this rule!
+  width: $ariaDialog--containerWidth;
+}
+.dialog__header {
+  //
+}
+.dialog__heading {
+  //
+}
+.dialog__dismiss-btn {
+  @extend %position-absolute;
+  right: $ariaDialog--dismissBtnRight;
+  top: $ariaDialog--dismissBtnTop;
+}
+.dialog__body {
+  //
+}
+.dialog__options {
+  //
+}
+.dialog__option-btn {
+  //
+}
+//-----------------------------
+//MODIFIERS
+//-----------------------------
+//Alert dialog
+.dialog__container_alert {
+  background-color: $ariaDialog--containerAlertBackgroundColor;
+  border: $ariaDialog--containerAlertBorder;
+  border-radius: $ariaDialog--containerAlertBorderRadius;
+  @include box-shadow($ariaDialog--containerAlertBoxShadow);
+  color: $ariaDialog--alertColor;
+}
+.dialog__header_alert {
+  //
+}
+.dialog__heading_alert {
+  //
+}
+.dialog__dismiss-btn_alert {
+  //
+}
+.dialog__body_alert {
+  //
+}
+.dialog__options_alert {
+  //
+}
+.dialog__option-btn_alert {
+  //
+}
