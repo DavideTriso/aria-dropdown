@@ -24,8 +24,6 @@
     }
   }
 
-
-
   //-----------------------------------------------
   //METHODS
   //-----------------------------------------------
@@ -41,7 +39,8 @@
       ddArray = [];
 
 
-    //Set IDs on dd button and dd collapse if not set
+    //Set IDs on dd, dd button and dd collapse if not set
+    setId(dropdown, 'dropdown_', count);
     setId(elements.ddBtn, 'dropdown__btn-', count);
     setId(elements.ddCollapse, 'dropdown__collapse-', count);
 
@@ -149,7 +148,7 @@
 
     //Collapse all dropdowns with expandOnlyOne set to true
     for (i; i < ddsCollapseArrayLenght; i = i + 1) {
-      if ($.data(ddsCollapseArray[i]) !== $.data(dropdown)) {
+      if (ddsCollapseArray[i].attr('id') !== dropdown.attr('id')) {
         methods.collapse(ddsCollapseArray[i], true);
       }
     }
@@ -194,25 +193,34 @@
     } else {
       switch (userSettings) {
         case 'expand':
-          methods.expand($(this)[0], true);
+          this.each(function () {
+            methods.expand($(this), true);
+          });
           break;
         case 'collapse':
-          methods.collapse($(this)[0], true);
+          this.each(function () {
+            methods.collapse($(this), true);
+          });
           break;
         case 'show':
-          methods.expand($(this)[0], false);
+          this.each(function () {
+            methods.expand($(this), false);
+          });
           break;
         case 'hide':
-          methods.collapse($(this)[0], false);
+          this.each(function () {
+            methods.collapse($(this), false);
+          });
+          break;
         case 'toggle':
-          methods.toggle($(this)[0], true);
+          this.each(function () {
+            methods.toggle($(this), true);
+          });
+          break;
       }
     }
   };
 
- 
-  
-  
   $.fn.ariaDropdown.defaultSettings = {
     ddBtnClass: 'dropdown__btn',
     ddDismissBtnClass: 'dropdown__dismiss-btn',
@@ -228,3 +236,18 @@
     collapseZIndex: 1
   };
 }(jQuery));
+
+
+$(document).ready(function () {
+  'use strict';
+  $('.dropdown-group-1').ariaDropdown({
+    animationSpeed: 200,
+    animationType: 'slide'
+  });
+  $('.dropdown-group-2').ariaDropdown({
+    animationSpeed: 400,
+    animationType: 'fade',
+    collapseOnOutsideClick: true,
+    expandOnlyOne: false
+  });
+});

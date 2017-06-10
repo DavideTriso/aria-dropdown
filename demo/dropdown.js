@@ -148,7 +148,7 @@
 
     //Collapse all dropdowns with expandOnlyOne set to true
     for (i; i < ddsCollapseArrayLenght; i = i + 1) {
-      if ($.data(ddsCollapseArray[i]) !== $.data(dropdown)) {
+      if (ddsCollapseArray[i].attr('id') !== dropdown.attr('id')) {
         methods.collapse(ddsCollapseArray[i], true);
       }
     }
@@ -193,19 +193,30 @@
     } else {
       switch (userSettings) {
         case 'expand':
-          methods.expand($(this), true);
+          this.each(function () {
+            methods.expand($(this), true);
+          });
           break;
         case 'collapse':
-          methods.collapse($(this), true);
+          this.each(function () {
+            methods.collapse($(this), true);
+          });
           break;
         case 'show':
-          methods.expand($(this), false);
+          this.each(function () {
+            methods.expand($(this), false);
+          });
           break;
         case 'hide':
-          methods.collapse($(this), false);
+          this.each(function () {
+
+            methods.collapse($(this), false);
+          });
           break;
         case 'toggle':
-          methods.toggle($(this), true);
+          this.each(function () {
+            methods.toggle($(this), true);
+          });
           break;
       }
     }
@@ -240,8 +251,4 @@ $(document).ready(function () {
     collapseOnOutsideClick: true,
     expandOnlyOne: false
   });
-  
-  $('#dropdown_1').ariaDropdown('expand');
-  
-  
 });
