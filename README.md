@@ -1,4 +1,3 @@
-# DO NOT USE! NOT READY YET
 # ARIA DROPDOWN
 
 ## About
