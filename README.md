@@ -115,9 +115,6 @@ $('#my-dropdown').ariaDropdown('hide');
 $('#my-dropdown').ariaDropdown('toggle');
 ````
 
-**NOTE:** All the methods must be called only on one jQuery object at a time.
-
-
 ## LICENSE
 
 This project is licensed under the terms of the **MIT license**.
