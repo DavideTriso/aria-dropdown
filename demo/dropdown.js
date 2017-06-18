@@ -61,14 +61,14 @@
     methods.collapse(dropdown, false);
 
     //Bind event handler to dropdown
-    elements.ddBtn.on('click', function () {
+    elements.ddBtn.on('click.ariaDropdown', function () {
       methods.toggle(dropdown, true);
     });
 
 
     //Bind event handler to dismiss button, if button exists
     if (elements.ddDismissBtn !== null) {
-      elements.ddDismissBtn.on('click', function () {
+      elements.ddDismissBtn.on('click.ariaDropdown', function () {
         //collapse dropdown on click
         methods.collapse(dropdown, true);
         //manage focus: move focus back to ddBtn
@@ -79,12 +79,12 @@
 
     //close dropdown when user clicks outside the dropdown
     if (settings.collapseOnOutsideClick) {
-      $(window).on('click', function () {
+      $(window).on('click.ariaDropdown', function () {
         methods.collapse(dropdown, true);
       });
       //stop propagation: prevent dropdown from closing when user clicks inside it
 
-      $(dropdown).on('click', function (event) {
+      $(dropdown).on('click.ariaDropdown', function (event) {
         event.stopPropagation();
       });
     }
