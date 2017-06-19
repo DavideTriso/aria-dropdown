@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, window) {
   'use strict';
   var ddsCollapseArray = [], //save objects of dropdowns with expandOnlyOne set to true
     ddsCollapseArrayLenght = 0,
@@ -20,7 +20,7 @@
   //set id on element if not set
   function setId(element, id, i) {
     if (!element.is('[id]')) {
-      element.attr('id', id + (i + 1));
+      element.attr('id', `${id}${i + 1}`);
     }
   }
 
@@ -61,14 +61,14 @@
     methods.collapse(dropdown, false);
 
     //Bind event handler to dropdown
-    elements.ddBtn.on('click.ariaDropdown', function () {
+    dropdown.on('click.ariaDropdown', '.' + settings.ddBtnClass, function () {
       methods.toggle(dropdown, true);
     });
 
 
     //Bind event handler to dismiss button, if button exists
     if (elements.ddDismissBtn !== null) {
-      elements.ddDismissBtn.on('click.ariaDropdown', function () {
+      dropdown.on('click.ariaDropdown', '.' + settings.ddDismissBtnClass, function () {
         //collapse dropdown on click
         methods.collapse(dropdown, true);
         //manage focus: move focus back to ddBtn
@@ -83,13 +83,13 @@
         methods.collapse(dropdown, true);
       });
       //stop propagation: prevent dropdown from closing when user clicks inside it
-
-      $(dropdown).on('click.ariaDropdown', function (event) {
+      dropdown.on('click.ariaDropdown', function (event) {
         event.stopPropagation();
       });
     }
 
-
+    //keep track of of dopdowns with option expandOnlyOne set to true
+    //this is necessary in order to kwnow wich dropdowns to collapse, when another dropdown is expanded
     //push dropdown object to ddsCollapseArray, if expandOnyOne is set to true
     if (settings.expandOnlyOne) {
       //push to array
@@ -136,8 +136,8 @@
 
     ddCollapse
       .attr(a.aHi, a.f)
-      .css('z-index', settings.expandZIndex)
-      .addClass(settings.ddCollapseExpandedClass);
+      .addClass(settings.ddCollapseExpandedClass)
+      .css('z-index', settings.expandZIndex);
 
     //Animate dropdown
     if (settings.animationType === 'slide') {
@@ -170,8 +170,8 @@
 
     ddCollapse
       .attr(a.aHi, a.t)
-      .css('z-index', settings.collapseZIndex)
-      .removeClass(settings.ddCollapseExpandedClass);
+      .removeClass(settings.ddCollapseExpandedClass)
+      .css('z-index', settings.collapseZIndex);
 
     //Animate dropdown
     if (settings.animationType === 'slide') {
@@ -236,4 +236,4 @@
     expandZIndex: 10,
     collapseZIndex: 1
   };
-}(jQuery));
+}(jQuery, window));
