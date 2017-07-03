@@ -1,272 +1,333 @@
-(function ($, window) {
+(function ($, window, document) {
   'use strict';
-  var ddsCollapseArray = [], //save objects of dropdowns with expandOnlyOne set to true
-    ddsCollapseArrayLenght = 0,
-    methods = {},
+  var pluginName = 'ariaDropdown', // the name of the plugin
     a = {
       aCs: 'aria-controls',
       aHi: 'aria-hidden',
+      aOw: 'aria-owns',
       aEx: 'aria-expanded',
       aHp: 'aria-haspopup',
+      zIn: 'z-index',
       t: 'true',
       f: 'false'
     },
-    count = 0;
+    count = 0,
+    win = $(window);
 
 
+  //-----------------------------------------
+  //Private functions
 
-  //PRIVATE METHODS
-  //-----------------------------------------------
-  //set id on element if not set
-  function setId(element, id, i) {
+  /*
+   * set id of the element passed along
+   * if the element does not have one
+   * and return the id of the element
+   */
+  function setId(element, idPrefix, idSuffix) {
     if (!element.is('[id]')) {
-      element.attr('id', `${id}${i + 1}`);
+      element.attr('id', idPrefix + idSuffix);
     }
+    return element.attr('id');
   }
 
-  //-----------------------------------------------
-  //METHODS
-  //-----------------------------------------------
-
-  methods.init = function (userSettings, dropdown) {
-    var settings = $.extend({}, $.fn.ariaDropdown.defaultSettings, userSettings),
-      elements = {
-        ddBtn: dropdown.find('.' + settings.ddBtnClass),
-        ddCollapse: dropdown.find('.' + settings.ddCollapseClass),
-        ddDismissBtn: dropdown.find('.' + settings.ddDismissBtnClass)
-          .length > 0 ? dropdown.find('.' + settings.ddDismissBtnClass) : null
-      },
-      ddArray = [];
 
 
-    //Set IDs on dd, dd button and dd collapse if not set
-    setId(dropdown, 'dropdown_', count);
-    setId(elements.ddBtn, 'dropdown__btn-', count);
-    setId(elements.ddCollapse, 'dropdown__collapse-', count);
-
-    //Set accessibility attributes to dropdown
-    elements.ddBtn
-      .attr(a.aHp, a.t)
-      .attr(a.aCs, elements.ddCollapse.attr('id'));
-    elements.ddCollapse
-      .attr(a.aHi, a.t);
-
-    //Push all data to array
-    ddArray.push(settings, elements);
-
-    //Append all data to $().data
-    dropdown.data('ddArray', ddArray);
-
-    //Hide dropdown collapse
-    methods.collapse(dropdown, false);
-
-    //Bind event handler to dropdown
-    dropdown.on('click.ariaDropdown', '.' + settings.ddBtnClass, function () {
-      methods.toggle(dropdown, true);
-    });
+  //-----------------------------------------
+  // The actual plugin constructor
+  function AriaDropdown(element, userSettings) {
+    var self = this;
+    self.settings = $.extend({}, $.fn[pluginName].defaultSettings, userSettings);
+    self.element = $(element); //the dropdown element
+    self.btn = self.element.find('> .' + self.settings.btnClass); //the dropdown button
+    self.menu = self.element.find('> .' + self.settings.menuClass); //the dropdown menu
+    self.elementStatus = false; //the status of the element (false = collapsed, true = expanded)
 
 
-    //Bind event handler to dismiss button, if button exists
-    if (elements.ddDismissBtn !== null) {
-      dropdown.on('click.ariaDropdown', '.' + settings.ddDismissBtnClass, function () {
-        //collapse dropdown on click
-        methods.collapse(dropdown, true);
-        //manage focus: move focus back to ddBtn
-        elements.ddBtn.focus();
+    //call init
+    self.init();
+  }
+
+  // Avoid Plugin.prototype conflicts
+  $.extend(AriaDropdown.prototype, {
+    init: function () {
+      var self = this;
+
+      /*
+       * Set ids on menu and button if they do not have one yet
+       * We need to make sure this two elements have an ID so we can refence their IDs
+       * in the aria-contorls and aria-owns attributes and expose relationship between
+       * this two widget components
+       */
+      self.btnId = setId(self.btn, 'dropdown__btn--', count);
+      self.menuId = setId(self.menu, 'dropdown__menu--', count);
+
+
+      //Set accessibility attributes on menu
+      self.menu
+        .attr(a.aHi, a.t)
+        .attr(a.aOw, self.btnId);
+
+
+      //Set attributes on btn
+      self.btn
+        .attr(a.aHp, a.t)
+        .attr(a.aCs, self.menuId);
+
+
+      //Initialise the dropdown by hiding the menu
+      self.slideUp(false);
+
+
+      /*
+       * Register event listeners:
+       * 1: click.ariaDropdown.window -> click on window: collapse expanded dropdowns when
+       * user clicks everywhere in the window outside of the dropdown
+       */
+      win.on('click.' + pluginName + '.window', function () {
+        if (self.elementStatus) {
+          self.slideUp(true);
+        }
       });
-    }
 
 
-    //close dropdown when user clicks outside the dropdown
-    if (settings.collapseOnOutsideClick) {
-      $(window).on('click.ariaDropdown', function () {
-        methods.collapse(dropdown, true);
-      });
-      //stop propagation: prevent dropdown from closing when user clicks inside it
-      dropdown.on('click.ariaDropdown', function (event) {
+      /*
+       * Prevent dropdown from being collapsed when click.ariaDropdown.window occurs 
+       * and target is a dropdown. Otherwise it would not be possible to expand a dropdown
+       */
+      self.element.on('click.' + pluginName + '.window', function (event) {
         event.stopPropagation();
       });
-    }
-
-    //keep track of of dopdowns with option expandOnlyOne set to true
-    //this is necessary in order to kwnow wich dropdowns to collapse, when another dropdown is expanded
-    //push dropdown object to ddsCollapseArray, if expandOnyOne is set to true
-    if (settings.expandOnlyOne) {
-      //push to array
-      ddsCollapseArray.push(dropdown);
-      //increment ddsCollapseArrayLenght to keep track of array lenght,
-      //so it is not necessary to calculate array size
-      //each time a dropdown get expanded
-      ddsCollapseArrayLenght = ddsCollapseArrayLenght + 1;
-    }
-
-    //increment count
-    count = count + 1;
-  };
 
 
-
-
-  methods.toggle = function (dropdown, animate) {
-    var expandedClass = dropdown.data('ddArray')[0].ddExpandedClass;
-
-    if (dropdown.hasClass(expandedClass)) {
-      methods.collapse(dropdown, animate);
-    } else {
-      methods.expand(dropdown, animate);
-    }
-  };
-
-
-
-
-  methods.expand = function (dropdown, animate) {
-    var ddBtn = dropdown.data('ddArray')[1].ddBtn,
-      ddCollapse = dropdown.data('ddArray')[1].ddCollapse,
-      settings = dropdown.data('ddArray')[0],
-      animationSpeed = animate === true ? settings.animationSpeed : 0,
-      i = 0;
-
-    //Update attributes and classes
-    dropdown.addClass(settings.ddExpandedClass);
-
-    ddBtn
-      .attr(a.aEx, a.t)
-      .addClass(settings.ddBtnExpandedClass);
-
-    ddCollapse
-      .attr(a.aHi, a.f)
-      .addClass(settings.ddCollapseExpandedClass)
-      .css('z-index', settings.expandZIndex);
-
-    //Animate dropdown
-    if (settings.animationType === 'slide') {
-      ddCollapse.stop().slideDown(animationSpeed);
-    } else if (settings.animationType === 'fade') {
-      ddCollapse.stop().fadeIn(animationSpeed);
-    }
-
-    //Collapse all dropdowns with expandOnlyOne set to true
-    for (i; i < ddsCollapseArrayLenght; i = i + 1) {
-      if (ddsCollapseArray[i].attr('id') !== dropdown.attr('id')) {
-        methods.collapse(ddsCollapseArray[i], true);
-      }
-    }
-  };
-
-
-  methods.collapse = function (dropdown, animate) {
-    var ddBtn = dropdown.data('ddArray')[1].ddBtn,
-      ddCollapse = dropdown.data('ddArray')[1].ddCollapse,
-      settings = dropdown.data('ddArray')[0],
-      animationSpeed = animate === true ? settings.animationSpeed : 0;
-
-    //Update attributes and classes
-    dropdown.removeClass(settings.ddExpandedClass);
-
-    ddBtn
-      .attr(a.aEx, a.f)
-      .removeClass(settings.ddBtnExpandedClass);
-
-    ddCollapse
-      .attr(a.aHi, a.t)
-      .removeClass(settings.ddCollapseExpandedClass)
-      .css('z-index', settings.collapseZIndex);
-
-    //Animate dropdown
-    if (settings.animationType === 'slide') {
-      ddCollapse.stop().slideUp(animationSpeed);
-    } else if (settings.animationType === 'fade') {
-      ddCollapse.stop().fadeOut(animationSpeed);
-    }
-  };
-
-
-
-  //PLUGIN
-  //-----------------------------------------------
-  $.fn.ariaDropdown = function (userSettings) {
-    if (typeof userSettings === 'object' || typeof userSettings === 'undefined') {
-      this.each(function () {
-        methods.init(userSettings, $(this));
+      /*
+       * Register event listeners:
+       * 2: click.ariaDropdown -> click on dropdown: collapse or expand dropdowns on click
+       */
+      self.element.on('click.' + pluginName, function (event) {
+        self.toggle(true);
       });
-    } else {
-      switch (userSettings) {
-        case 'expand':
-          this.each(function () {
-            methods.expand($(this), true);
-          });
-          break;
-        case 'collapse':
-          this.each(function () {
-            methods.collapse($(this), true);
-          });
-          break;
-        case 'show':
-          this.each(function () {
-            methods.expand($(this), false);
-          });
-          break;
-        case 'hide':
-          this.each(function () {
 
-            methods.collapse($(this), false);
-          });
-          break;
+
+      /*
+       * Listen for clicks inside of menu to prevent menu to collapse when user clicks on it.
+       * If collapseOnMenuClick is s et to true, then we do not need to stop event propagation.
+       * The option collapseOnMenuClick could be useful for implementing non-navigational dropdowns
+       * (e.g. dropdowns in a toolbar) wich should collapse after a menu entry has been selected.
+       */
+      if (!self.settings.collapseOnMenuClick) {
+        self.menu.on('click.' + pluginName, function (event) {
+          event.stopPropagation();
+        });
+      }
+
+      /*
+       * Listen for custom event and collapse this dropdown if expanded
+       * and expandOnlyOne is set to true.
+       * Argument 'element' is the dropdown expanded by user, wich should not be collapsed.
+       */
+      if (self.settings.expandOnlyOne) {
+        win.on(pluginName + '.slideDown', function (event, element) {
+          if (element !== self.element && self.elementStatus) {
+            self.slideUp();
+          }
+        });
+      }
+
+      //increment count by 1 
+      count = count + 1;
+    },
+    toggle: function () {
+      var self = this;
+
+      if (self.elementStatus) {
+        self.slideUp(true);
+      } else {
+        self.slideDown(true);
+      }
+    },
+    collapse: function () {
+      /*
+       * This methods updates the attributes of the dialog
+       * and removes the expanded classes from all elements.
+       */
+      var self = this;
+
+      self.element
+        .removeClass(self.settings.dropdownExpandedClass);
+
+      self.btn
+        .removeClass(self.settings.btnExpandedClass)
+        .attr(a.aEx, a.f);
+
+      self.menu
+        .removeClass(self.settings.menuExpandedClass)
+        .attr(a.aHi, a.t);
+
+      //Update widget status
+      self.elementStatus = false;
+    },
+    expand: function () {
+      /*
+       * This methods updates the attributes of the dialog
+       * and adds the expanded classes to all elements.
+       */
+      var self = this;
+
+      self.element
+        .addClass(self.settings.dropdownExpandedClass);
+
+      self.btn
+        .addClass(self.settings.btnExpandedClass)
+        .attr(a.aEx, a.t);
+
+      self.menu
+        .addClass(self.settings.menuExpandedClass)
+        .attr(a.aHi, a.f);
+
+      //Update widget status
+      self.elementStatus = true;
+    },
+    slideDown: function (animate) {
+      /*
+       * This methos performs the slide down animation on the menu,
+       * but only if cssTransitions is set to false
+       */
+      var self = this,
+        slideSpeed = animate ? self.settings.slideSpeed : 0;
+
+
+      /*
+       * We need to hide the dialog only if cssTransitions are disabled,
+       * otherwise all transitions and animations are handled in CSS and
+       * we only have to toggle the classes
+       */
+      if (!self.settings.cssTransitions) {
+        self.menu
+          .css(a.zIn, self.settings.expandZIndex)
+          .stop()
+          .slideDown(slideSpeed, self.settings.easing);
+      }
+
+      /*
+       * Trigger global custom event on window.
+       * This event is needed to collapse every expanded dropdowns with expandOnlyOne set to true
+       * when a dropdon is triggered by the user
+       * Also authors can listen for this custom event in order to execute operations when 
+       * a specific dropdown is expanded
+       */
+      win.trigger(pluginName + '.slideDown', self.element);
+
+      //call the expand method to update attributes and classes
+      self.expand();
+    },
+    slideUp: function (animate) {
+      /*
+       * This methos performs the slide up animation on the menu,
+       * but only if cssTransitions is set to false
+       */
+      var self = this,
+        slideSpeed = animate ? self.settings.slideSpeed : 0;
+
+      /*
+       * We need to hide the dialog only if cssTransitions are disabled,
+       * otherwise all transitions and animations are handled in CSS and
+       * we only have to toggle the classes
+       */
+      if (!self.settings.cssTransitions) {
+        self.menu
+          .css(a.zIn, self.settings.collapseZIndex)
+          .stop()
+          .slideUp(slideSpeed, self.settings.easing);
+      }
+
+
+      /*
+       * Authors can listen for this custom event in order to execute operations when 
+       * a specific dropdown is expanded
+       */
+      win.trigger(pluginName + '.slideUp', self.element);
+
+
+      //call the collapse method to update attributes and classes
+      self.collapse();
+    },
+    methodCaller: function (methodName) {
+      var self = this;
+
+      switch (methodName) {
         case 'toggle':
-          this.each(function () {
-            methods.toggle($(this), true);
-          });
+          self.toggle(true);
+          break;
+        case 'slideDown':
+          if (!self.elementStatus) {
+            self.slideDown(true);
+          }
+          break;
+        case 'slideUp':
+          if (self.elementStatus) {
+            self.slideUp(true);
+          }
           break;
       }
     }
+  });
+
+
+  // A really lightweight plugin wrapper around the constructor,
+  // preventing against multiple instantiations
+  $.fn[pluginName] = function (userSettings) {
+    return this.each(function () {
+      var self = this;
+      /*
+       * If following conditions matches, then the plugin must be initialsied:
+       * Check if the plugin is instantiated for the first time
+       * Check if the argument passed is an object or undefined (no arguments)
+       */
+      if (!$.data(self, 'plugin_' + pluginName) && (typeof userSettings === 'object' || typeof userSettings === 'undefined')) {
+        $.data(self, 'plugin_' + pluginName, new AriaDropdown(self, userSettings));
+      } else if (typeof userSettings === 'string') {
+        $.data(self, 'plugin_' + pluginName).methodCaller(userSettings);
+      }
+    });
   };
 
-  $.fn.ariaDropdown.defaultSettings = {
-    ddBtnClass: 'dropdown__btn',
-    ddDismissBtnClass: 'dropdown__dismiss-btn',
-    ddCollapseClass: 'dropdown__collapse',
-    ddExpandedClass: 'dropdown_expanded',
-    ddBtnExpandedClass: 'dropdown__btn_expanded',
-    ddCollapseExpandedClass: 'dropdown__collapse_expanded',
-    animationType: 'slide', //slide or fade
-    animationSpeed: 300,
+
+  //Define default settings
+  $.fn[pluginName].defaultSettings = {
+    btnClass: 'dropdown__btn',
+    menuClass: 'dropdown__menu',
+    dropdownExpandedClass: 'dropdown__expanded',
+    btnExpandedClass: 'dropdown__btn_expanded',
+    menuExpandedClass: 'dropdown__menu_expanded',
+    slideSpeed: 300,
+    easing: 'swing',
     collapseOnOutsideClick: true,
+    collapseOnMenuClick: false,
     expandOnlyOne: true,
     expandZIndex: 10,
-    collapseZIndex: 1
+    collapseZIndex: 1,
+    cssTransitions: false
   };
-}(jQuery, window));
+}(jQuery, window, document));
 
 
 $(document).ready(function () {
-  'use strict';
-
-  $('#dialog-1').ariaDialog({
-    fadeSpeed: 200,
-    closeWithEsc: true,
-    closeOnBgClick: true
+  $('.dropdown').ariaDropdown({
+    collapseOnMenuClick: false,
+    collapseOnOutsideClick: true,
+    expandOnlyOne: true
   });
 
-  $('#dialog-2').ariaDialog({
-    fadeSpeed: 200,
-    dialogType: 'alert'
-  });
+  $('.dropdown').first().ariaDropdown('slideDown');
 
-  $('#open-1').click(function () {
-    $('#dialog-1').ariaDialog('open');
-  });
 
-  $('#btn-yes-1').click(function () {
-    $('#dialog-1').ariaDialog('close');
+  /*
+  $(window).on('ariaDropdown.slideUp', function(event, element){
+    console.log(element);
   });
-
-  $('#open-2').click(function () {
-    $('#dialog-2').ariaDialog('open');
+  
+  $(window).on('ariaDropdown.slideDown', function(event, element){
+    console.log(element);
   });
-
-  $('#btn-yes-2, #dismiss-btn-2').click(function () {
-    $('#dialog-2').ariaDialog('close');
-  });
-
+  */
 });

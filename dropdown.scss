@@ -7,7 +7,7 @@ $dropdownWidth: 10rem;
 //ELEMENTS
 //.dropdown__btn {}
 //.dropdown__dismiss-btn {}
-.dropdown__collapse {
+.dropdown__menu {
   background-color: #fff;
   border: 0.1rem solid #dddddd;
   position: absolute;
@@ -18,14 +18,14 @@ $dropdownWidth: 10rem;
 //.dropdown__dismiss-btn {}
 
 //MODIFIERS
-.dropdown__collapse_center {
+.dropdown__menu_center {
   left: 50%;
   -webkit-transform: translateX(-50%);
   -moz-transform: translateX(-50%);
   -o-transform: translateX(-50%);
   transform: translateX(-50%);
 }
-.dropdown__collapse_right {
+.dropdown__menu_right {
   right: 0;
 }
 
