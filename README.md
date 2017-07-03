@@ -4,6 +4,12 @@
 
 jQuery plugin for **accessible** dropdowns: **WAI ARIA 1.1** compliant.
 
+* Easy to customize tanks to a small but usefull set of options.
+* SASS/SCSS files for simple and quick UI customisations.
+* Only 3KB (minified).
+* Fully compatible with [**t** css-framework](https://github.com/DavideTriso/t-css-framework)
+* Runs in strict mode.
+
 ## Dependencies
 
 **jQuery**
@@ -13,22 +19,22 @@ Developed and tested with jQuery 3.2.1
 ## Cross-browser tests
 
 * Tested on **Google Chrome 57** / macOS Sierra 10.
-* Testen on **Safari 10** / macOS Sierra 10.
 
 ## Options
 
 Name | Default | Type | Description
 -----|---------|------|-------------
-ddBtnClass | dropdown__btn | string | Class used to select dropdown's buttons.
-ddDismissBtnClass | dropdown__dismiss-btn | string |  Class used to select dropdown's dismiss buttons (alternative close button placed inside the collapsible region of a dropdown).
-ddCollapseClass | dropdown__collapse | string | Class used to select dropdown's collapsible region
-ddExpandedClass | dropdown_expanded | string | Class added to dropdown when expanded
-ddBtnExpandedClass | dropdown__btn_expanded | string | Class added to dropdown's buttons when dropdown is expanded.
-ddCollapseExpandedClass | dropdown__collapse_expanded | string | Class added to collapsible region when expanded.
-animationType | slide | token | Type of animation to apply to dropdown. Accepted values: slide, fade.
-animationSpeed | 300 | int (>= 0) | Collapse / expand animation duration.
+btnClass | dropdown__btn | string | Class used to select dropdown's buttons.
+menuClass | dropdown__menu | string | Class used to select dropdown's collapsible region
+dropdownExpandedClass | dropdown_expanded | string | Class added to dropdown when expanded
+btnExpandedClass | dropdown__btn_expanded | string | Class added to dropdown's buttons when dropdown is expanded.
+menuExpandedClass | dropdown__collapse_expanded | string | Class added to collapsible region when expanded.
+slideSpeed | 300 | int (>= 0) | Slide-up and slide-down animation duration.
+easing | swing | string | The easing function to use for the dropdown animation. Applies only for jQuery transitions, if **cssTransition** is set to true, this option will not have any effect on the transition. Accepted values are `swing` and `linear`. For more timing functions a jQuery easing plugin is needed. | optional
 collapseOnOutsideClick | true | bool | Collapse dropdown, when user clicks on any region of the page wich is not part of a dropdown.
+collapseOnMenuClick | false | bool | Collapse dropdown even when user clicks inside of it. Useful for non-navigational dropdown, like a dropdown in a toolbor | optional
 expandOnlyOne | true | bool | Automatically collapse dropdown if another dropdown is expanded
+cssTransition | false | bool | Use css transitions to expand/collapse dropdowns instead of jQuery slide animation. Read section 'Using CSS transitions' for more infos | optional
 expandZIndex | 10 | int | Z-index set to expanded dropdowns.
 collapseZIndex | 1 | int | Z-index set to dropdown's collapsible regions just before collapsing.
 
@@ -113,6 +119,33 @@ $('#my-dropdown').ariaDropdown('hide');
 ````javascript
 $('#my-dropdown').ariaDropdown('toggle');
 ````
+
+
+
+## Custom events
+
+The plugin triggers following events:
+
+* **ariaDropdown.slideDown** when a dropdown is expanded
+* **ariaDropdown.slideUp** when a dropdown is collapsed
+
+The custom events are triggered on window and return the dropdown element as arguments.
+
+```javascript
+
+//listen for ariaDropdowns.slideDown
+$(window).on('ariaDropdown.slideDown', function(event, element){
+  console.log('The dropdown ' + element + ' was expanded');
+});
+```
+
+## Using CSS transitions
+
+By default the plugin is configured to use the jQuery methods `slideDown()`, `slideUp` to expand/collapse dropdowns. Setting the option **cssTransitions** to 'true' will disable the JS animations and makes possible to implement the transitions directly with css. In fact, the plugin toggles the classes passed along with the options **dropdownExpandedClass**, **btnExpandedClass** and **menuExpandedClass** when a dropdown is toggled. 
+
+## Planned features
+
+* Better SCSS: Mixins to quickly build awesome responsive dropdowns.
 
 ## LICENSE
 
