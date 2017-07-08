@@ -157,6 +157,9 @@ SOFTWARE.
         });
       }
 
+      //trigger init event on windown for developer to listen for
+      win.trigger(pluginName + '.initialised', [self.element]);
+
       //increment count by 1 
       count = count + 1;
     },
@@ -345,13 +348,13 @@ $(document).ready(function () {
   $('.dropdown').first().ariaDropdown('slideDown');
 
 
-  
-  $(window).on('ariaDropdown.slideUp', function(event, element){
+
+  $(window).on('ariaDropdown.slideUp', function (event, element) {
     console.log(element);
   });
-  
-  $(window).on('ariaDropdown.slideDown', function(event, element){
+
+  $(window).on('ariaDropdown.slideDown', function (event, element) {
     console.log(element);
   });
-  
+
 });

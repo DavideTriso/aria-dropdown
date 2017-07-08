@@ -157,6 +157,9 @@ SOFTWARE.
         });
       }
 
+      //trigger init event on windown for developer to listen for
+      win.trigger(pluginName + '.initialised', [self.element]);
+
       //increment count by 1 
       count = count + 1;
     },
