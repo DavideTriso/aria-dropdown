@@ -4,9 +4,8 @@
 
 jQuery plugin for **user-friendly** and **accessible** dropdowns: **WAI ARIA 1.1** compliant.
 
-* SASS/SCSS files for simple and quick UI customisations.
+* User friendly and accessible
 * Only 3KB (minified).
-* Compatible with [**t** css-framework](https://github.com/DavideTriso/t-css-framework)
 * Runs in strict mode.
 
 ## Dependencies

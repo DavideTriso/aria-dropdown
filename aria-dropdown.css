@@ -1,10 +1,12 @@
 .dropdown {
   display: inline-block;
+  font-family: sans-serif;
   position: relative; }
 
 .dropdown__menu {
-  background-color: #fff;
-  border: 0.1rem solid #dddddd;
+  background-color: #454545;
+  border: 0.01rem solid #363636;
+  color: #fff;
   position: absolute;
   min-width: 10rem;
   padding: 0.5rem;
@@ -12,12 +14,9 @@
 
 .dropdown__menu_center {
   left: 50%;
-  -webkit-transform: translateX(-50%);
-  -moz-transform: translateX(-50%);
-  -o-transform: translateX(-50%);
   transform: translateX(-50%); }
 
 .dropdown__menu_right {
   right: 0; }
 
-/*# sourceMappingURL=dropdown.css.map */
+/*# sourceMappingURL=aria-dropdown.css.map */
