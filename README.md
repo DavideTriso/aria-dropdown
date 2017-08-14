@@ -116,13 +116,13 @@ The plugin triggers following events:
 * **ariaDropdown.slideDown** when a dropdown is expanded
 * **ariaDropdown.slideUp** when a dropdown is collapsed
 
-The events are triggered on window and return the dropdown element as arguments.
+The events are triggered on window and return the dropdown's data object as arguments.
 
 ```javascript
 
 //listen for ariaDropdowns.slideDown
-$(window).on('ariaDropdown.slideDown', function(event, element){
-  console.log('The dropdown ' + element + ' was expanded');
+$(window).on('ariaDropdown.slideDown', function(event, dropdown){
+  console.log('The dropdown ' + dropdown.element + ' was expanded');
 });
 ```
 

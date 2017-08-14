@@ -158,7 +158,7 @@ SOFTWARE.
       }
 
       //trigger init event on windown for developer to listen for
-      win.trigger(pluginName + '.initialised', [self.element]);
+      win.trigger(pluginName + '.initialised', [self]);
 
       //increment count by 1 
       count = count + 1;
@@ -242,7 +242,7 @@ SOFTWARE.
        * Also authors can listen for this custom event in order to execute operations when 
        * a specific dropdown is expanded
        */
-      win.trigger(pluginName + '.slideDown', self.element);
+      win.trigger(pluginName + '.slideDown', [self]);
 
       //call the expand method to update attributes and classes
       self.expand();
@@ -272,7 +272,7 @@ SOFTWARE.
        * Authors can listen for this custom event in order to execute operations when 
        * a specific dropdown is expanded
        */
-      win.trigger(pluginName + '.slideUp', self.element);
+      win.trigger(pluginName + '.slideUp', [self]);
 
 
       //call the collapse method to update attributes and classes
