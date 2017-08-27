@@ -22,7 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-(function ($, window, document) {
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['jquery'], factory);
+  }
+}(function ($, window, document) {
   'use strict';
   var pluginName = 'ariaDropdown', // the name of the plugin
     a = {
@@ -335,7 +340,7 @@ SOFTWARE.
     collapseZIndex: 1,
     cssTransitions: false
   };
-}(jQuery, window, document));
+}(jQuery, window, document)));
 
 
 $(document).ready(function () {
