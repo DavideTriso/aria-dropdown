@@ -7,6 +7,7 @@ jQuery plugin for **user-friendly** and **accessible** dropdowns: **WAI ARIA 1.1
 * User friendly and accessible
 * Only 3KB (minified).
 * Runs in strict mode.
+* Compatible with amd and require.js
 
 ## Dependencies
 
