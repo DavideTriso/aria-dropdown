@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Aria-dropdown demo</title>
+  <link rel="stylesheet" type="text/css" href="aria-dropdown.css">
+  <style>
+    body {
+      max-width: 1000px;
+      margin: auto;
+      font-family: sans-serif;
+    }
+    
+    .btn {
+      display: block;
+      max-width: 300px;
+      text-align: center;
+      text-decoration: none;
+      background-color: #6216c9;
+      color: #fff;
+      padding: 15px;
+      border-radius: 5px;
+      border: 1px solid #510cad;
+      margin: 250px auto;
+    }
+    
+    .btn:hover,
+    .btn:focus {
+      background-color: #510cad;
+    }
+    
+    .btn:avtive {
+      background-color: #6216c9;
+    }
+
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="aria-dropdown.js"></script>
+</head>
+
+<body>
+  <div class="dropdown dropdown-group-1">
+    <button type="button" class="dropdown__btn">Dropdown</button>
+    <div class="dropdown__menu" id="ciao">
+      <h4>Dropdown left</h4>
+      <ul>
+        <li>Link 1</li>
+        <li>Link 2</li>
+        <li>Link 3</li>
+        <li>Link 4</li>
+        <li>Link 5</li>
+      </ul>
+    </div>
+  </div>
+  <div class="dropdown dropdown-group-1">
+    <button type="button" class="dropdown__btn">Dropdown</button>
+    <div class="dropdown__menu dropdown__menu_right">
+      <h4>Dropdown right</h4>
+      <ul>
+        <li>Link 1</li>
+        <li>Link 2</li>
+        <li>Link 3</li>
+        <li>Link 4</li>
+        <li>Link 5</li>
+      </ul>
+    </div>
+  </div>
+  <div class="dropdown dropdown-group-2">
+    <button type="button" class="dropdown__btn">Dropdown</button>
+    <div class="dropdown__menu dropdown__menu_center">
+      <h4>Dropdown center</h4>
+      <ul>
+        <li>Link 1</li>
+        <li>Link 2</li>
+        <li>Link 3</li>
+        <li>Link 4</li>
+        <li>Link 5</li>
+      </ul>
+    </div>
+  </div>
+  <a href="https://github.com/DavideTriso/aria-dropdown" class="btn">Check documentation</a>
+</body>
+
+</html>
