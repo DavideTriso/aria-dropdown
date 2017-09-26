@@ -66,7 +66,7 @@ By default the menu is aligned on the left side with the button. Use modifier cl
 
 ### JS: Initialise
 
-Initialise the plugin as follows: 
+Initialise the plugin as follows:
 
 ```javascript
 $('.dropdown').ariaDropdown({
@@ -106,7 +106,7 @@ $('#my-dropdown').ariaDropdown('slideUp');
 ````javascript
 $('#my-dropdown').ariaDropdown('toggle');
 ````
-
+.
 
 
 ## Custom events
@@ -129,7 +129,7 @@ $(window).on('ariaDropdown.slideDown', function(event, dropdown){
 
 ## Using CSS transitions
 
-By default the plugin is configured to use the jQuery methods `slideDown()` and `slideUp()` to expand/collapse dropdowns. Setting the option **cssTransitions** to 'true' will disable the JS animations. This makes possible to implement the transitions directly with css. In fact, the plugin toggles the classes passed along with the options **dropdownExpandedClass**, **btnExpandedClass** and **menuExpandedClass**, when a dropdown is toggled. 
+By default the plugin is configured to use the jQuery methods `slideDown()` and `slideUp()` to expand/collapse dropdowns. Setting the option **cssTransitions** to 'true' will disable the JS animations. This makes possible to implement the transitions directly with css. In fact, the plugin toggles the classes passed along with the options **dropdownExpandedClass**, **btnExpandedClass** and **menuExpandedClass**, when a dropdown is toggled.
 
 ## Planned features
 

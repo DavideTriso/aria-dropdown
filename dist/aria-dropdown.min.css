@@ -1,0 +1,1 @@
+.dropdown{display:inline-block;font-family:sans-serif;position:relative}.dropdown__menu{background-color:#454545;border:.01rem solid #363636;color:#fff;position:absolute;min-width:10rem;padding:.5rem;z-index:1}.dropdown__menu_center{left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%)}.dropdown__menu_right{right:0}

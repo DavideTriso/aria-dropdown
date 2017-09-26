@@ -1,7 +1,8 @@
 .dropdown {
   display: inline-block;
   font-family: sans-serif;
-  position: relative; }
+  position: relative;
+}
 
 .dropdown__menu {
   background-color: #454545;
@@ -10,13 +11,16 @@
   position: absolute;
   min-width: 10rem;
   padding: 0.5rem;
-  z-index: 999; }
+  z-index: 999;
+}
 
 .dropdown__menu_center {
   left: 50%;
-  transform: translateX(-50%); }
+  -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+          transform: translateX(-50%);
+}
 
 .dropdown__menu_right {
-  right: 0; }
-
-/*# sourceMappingURL=aria-dropdown.css.map */
+  right: 0;
+}

@@ -341,25 +341,3 @@ SOFTWARE.
     cssTransitions: false
   };
 }(jQuery, window, document)));
-
-
-$(document).ready(function () {
-  $('.dropdown').ariaDropdown({
-    collapseOnMenuClick: false,
-    collapseOnOutsideClick: true,
-    expandOnlyOne: true
-  });
-
-  $('.dropdown').first().ariaDropdown('slideDown');
-
-
-
-  $(window).on('ariaDropdown.slideUp', function (event, element) {
-    console.log(element);
-  });
-
-  $(window).on('ariaDropdown.slideDown', function (event, element) {
-    console.log(element);
-  });
-
-});

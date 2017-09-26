@@ -1,9 +1,10 @@
 .dropdown {
   display: inline-block;
-  font-family: sans-serif; 
+  font-family: sans-serif;
   position: relative;
 }
-.dropdown__menu { 
+
+.dropdown__menu {
   background-color: #454545;
   border: 0.01rem solid #363636;
   color: #fff;
@@ -12,10 +13,14 @@
   padding: 0.5rem;
   z-index: 999;
 }
+
 .dropdown__menu_center {
   left: 50%;
-  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+          transform: translateX(-50%);
 }
+
 .dropdown__menu_right {
   right: 0;
-} 
+}
