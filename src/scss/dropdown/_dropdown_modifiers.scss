@@ -1,0 +1,44 @@
+//----------------
+//MODIFIERS
+//----------------
+//
+//POSITIONING
+
+.dropdown__menu_center {
+  @extend %left-50;
+  transform: translateX(-50%);
+}
+
+.dropdown__menu_right {
+  @extend %right-0;
+}
+
+.dropdown__menu_left {
+  @extend %left-0;
+}
+
+.dropdown__menu_right-most {
+  @extend %left-100;
+}
+
+.dropdown__menu_left-most {
+  @extend %right-100;
+}
+
+.dropdown__menu_dropup {
+  //
+}
+//
+//STATES
+
+.dropdown__menu_expanded {
+  //
+}
+
+.dropdown_expanded {
+  //
+}
+
+.dropdown__btn_expanded {
+  //
+}

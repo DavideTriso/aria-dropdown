@@ -60,7 +60,6 @@ SOFTWARE.
   }
 
 
-
   //-----------------------------------------
   // The actual plugin constructor
   function AriaDropdown(element, userSettings) {
@@ -79,7 +78,12 @@ SOFTWARE.
   // Avoid Plugin.prototype conflicts
   $.extend(AriaDropdown.prototype, {
     init: function () {
-      var self = this;
+      var self = this,
+        settings = self.settings,
+        menu = self.menu,
+        btn = self.btn,
+        element = self.element;
+
 
       /*
        * Set ids on menu and button if they do not have one yet
@@ -92,13 +96,13 @@ SOFTWARE.
 
 
       //Set accessibility attributes on menu
-      self.menu
+      menu
         .attr(a.aHi, a.t)
         .attr(a.aOw, self.btnId);
 
 
       //Set attributes on btn
-      self.btn
+      btn
         .attr(a.aHp, a.t)
         .attr(a.aCs, self.menuId);
 
@@ -109,21 +113,22 @@ SOFTWARE.
 
       /*
        * Register event listeners:
-       * 1: click.ariaDropdown.window -> click on window: collapse expanded dropdowns when
+       * 1: click.ariaDropdown -> click on window: collapse expanded dropdowns when
        * user clicks everywhere in the window outside of the dropdown
        */
-      win.on('click.' + pluginName + '.window', function () {
-        if (self.elementStatus) {
-          self.slideUp(true);
-        }
-      });
-
+      if (self.settings.collapseOnOutsideClick) {
+        win.on('click.' + pluginName, function () {
+          if (self.elementStatus) {
+            self.slideUp(true);
+          }
+        });
+      }
 
       /*
-       * Prevent dropdown from being collapsed when click.ariaDropdown.window occurs 
+       * Prevent dropdown from being collapsed when click.ariaDropdown occurs
        * and target is a dropdown. Otherwise it would not be possible to expand a dropdown
        */
-      self.element.on('click.' + pluginName + '.window', function (event) {
+      element.on('click.' + pluginName, function (event) {
         event.stopPropagation();
       });
 
@@ -132,7 +137,7 @@ SOFTWARE.
        * Register event listeners:
        * 2: click.ariaDropdown -> click on dropdown: collapse or expand dropdowns on click
        */
-      self.element.on('click.' + pluginName, function (event) {
+      element.on('click.' + pluginName, function (event) {
         self.toggle(true);
       });
 
@@ -144,7 +149,7 @@ SOFTWARE.
        * (e.g. dropdowns in a toolbar) wich should collapse after a menu entry has been selected.
        */
       if (!self.settings.collapseOnMenuClick) {
-        self.menu.on('click.' + pluginName, function (event) {
+        menu.on('click.' + pluginName, function (event) {
           event.stopPropagation();
         });
       }
@@ -165,7 +170,7 @@ SOFTWARE.
       //trigger init event on windown for developer to listen for
       win.trigger(pluginName + '.initialised', [self]);
 
-      //increment count by 1 
+      //increment count by 1
       count = count + 1;
     },
     toggle: function () {
@@ -234,8 +239,10 @@ SOFTWARE.
        * we only have to toggle the classes
        */
       if (!self.settings.cssTransitions) {
-        self.menu
+        self.element
           .css(a.zIn, self.settings.expandZIndex)
+
+        self.menu
           .stop()
           .slideDown(slideSpeed, self.settings.easing);
       }
@@ -244,7 +251,7 @@ SOFTWARE.
        * Trigger global custom event on window.
        * This event is needed to collapse every expanded dropdowns with expandOnlyOne set to true
        * when a dropdon is triggered by the user
-       * Also authors can listen for this custom event in order to execute operations when 
+       * Also authors can listen for this custom event in order to execute operations when
        * a specific dropdown is expanded
        */
       win.trigger(pluginName + '.slideDown', [self]);
@@ -266,15 +273,17 @@ SOFTWARE.
        * we only have to toggle the classes
        */
       if (!self.settings.cssTransitions) {
+        self.element
+          .css(a.zIn, self.settings.collapseZIndex);
+
         self.menu
-          .css(a.zIn, self.settings.collapseZIndex)
           .stop()
           .slideUp(slideSpeed, self.settings.easing);
       }
 
 
       /*
-       * Authors can listen for this custom event in order to execute operations when 
+       * Authors can listen for this custom event in order to execute operations when
        * a specific dropdown is expanded
        */
       win.trigger(pluginName + '.slideUp', [self]);
@@ -287,19 +296,19 @@ SOFTWARE.
       var self = this;
 
       switch (methodName) {
-        case 'toggle':
-          self.toggle(true);
-          break;
-        case 'slideDown':
-          if (!self.elementStatus) {
-            self.slideDown(true);
-          }
-          break;
-        case 'slideUp':
-          if (self.elementStatus) {
-            self.slideUp(true);
-          }
-          break;
+      case 'toggle':
+        self.toggle(true);
+        break;
+      case 'slideDown':
+        if (!self.elementStatus) {
+          self.slideDown(true);
+        }
+        break;
+      case 'slideUp':
+        if (self.elementStatus) {
+          self.slideUp(true);
+        }
+        break;
       }
     }
   });
@@ -328,7 +337,7 @@ SOFTWARE.
   $.fn[pluginName].defaultSettings = {
     btnClass: 'dropdown__btn',
     menuClass: 'dropdown__menu',
-    dropdownExpandedClass: 'dropdown__expanded',
+    dropdownExpandedClass: 'dropdown_expanded',
     btnExpandedClass: 'dropdown__btn_expanded',
     menuExpandedClass: 'dropdown__menu_expanded',
     slideSpeed: 300,

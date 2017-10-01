@@ -1,5 +1,6 @@
 {
-  "name": "aria-dropdown",
+  "name": "t-aria-dropdown",
+  "version": "1.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -16,5 +17,7 @@
     "gulp-uglify": "^3.0.0",
     "require-dir": "^0.3.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "t-css-framework": "^0.2.4"
+  }
 }

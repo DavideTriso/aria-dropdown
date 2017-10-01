@@ -2,7 +2,7 @@
 
 ## About
 
-jQuery plugin for **user-friendly** and **accessible** dropdowns: **WAI ARIA 1.1** compliant. [Go to demo page](https://davidetriso.github.io/aria-dropdown/).
+jQuery plugin for **user-friendly** and **accessible** dropdowns: **WAI ARIA 1.1** compliant. [Go to demo page](https://davidetriso.github.io/aria-dropdown/) or [check on npm](https://www.npmjs.com/package/t-aria-dropdown).
 
 * User friendly and accessible
 * Only 3KB (minified).
@@ -30,12 +30,21 @@ btnExpandedClass | dropdown__btn_expanded | string | Class added to dropdown's b
 menuExpandedClass | dropdown__collapse_expanded | string | Class added to dropdown's collapsible region when expanded.
 slideSpeed | 300 | int (>= 0) | Slide-up and slide-down animation duration.
 easing | swing | string | The easing function to use for the dropdown animation. Applies only for jQuery transitions, if **cssTransitions** is set to true, this option will not have any effect on the transition. Accepted values are `swing` and `linear`. For more easing functions a jQuery easing plugin is needed.
-collapseOnOutsideClick | true | bool | Collapse dropdown, when user clicks on any region of the page wich is not part of a dropdown.
-collapseOnMenuClick | false | bool | Collapse dropdown even when user clicks inside of it. Useful for non-navigational dropdown, like a dropdown in a toolbar, wich should collapse automatically after an option has been selected from user.
+collapseOnOutsideClick | true | bool | Collapse dropdown, when user clicks on any region of the page which is not part of a dropdown.
+collapseOnMenuClick | false | bool | Collapse dropdown even when user clicks inside of it. Useful for non-navigational dropdown, like a dropdown in a toolbar, which should collapse automatically after an option has been selected from user.
 expandOnlyOne | true | bool | Automatically collapse dropdown if another dropdown is expanded by user
-cssTransitions | false | bool | Use css transitions to expand/collapse dropdowns instead of jQuery slide animation. Read section 'Using CSS transitions' for more informations
-expandZIndex | 10 | int | Z-index set to dropdown's collapsible regions during expand animation and while expanded.
-collapseZIndex | 1 | int | Z-index set to dropdown's collapsible regions just before collapsing.
+cssTransitions | false | bool | Use css transitions to expand/collapse drop-downs instead of jQuery slide animation. Read section 'Using CSS transitions' for more informations
+expandZIndex | 10 | int | Z-index of dropdown during expand animation and while expanded.
+collapseZIndex | 1 | int | Z-index set to dropdown just before collapsing.
+
+## Installation
+
+Download the package from **GitHub** and get the compiled files from the `dist` folder.
+
+The plugin is also available on **npm**:
+```
+npm install t-aria-dropdown
+```
 
 ## Usage
 
@@ -106,8 +115,6 @@ $('#my-dropdown').ariaDropdown('slideUp');
 ````javascript
 $('#my-dropdown').ariaDropdown('toggle');
 ````
-.
-
 
 ## Custom events
 
@@ -129,11 +136,7 @@ $(window).on('ariaDropdown.slideDown', function(event, dropdown){
 
 ## Using CSS transitions
 
-By default the plugin is configured to use the jQuery methods `slideDown()` and `slideUp()` to expand/collapse dropdowns. Setting the option **cssTransitions** to 'true' will disable the JS animations. This makes possible to implement the transitions directly with css. In fact, the plugin toggles the classes passed along with the options **dropdownExpandedClass**, **btnExpandedClass** and **menuExpandedClass**, when a dropdown is toggled.
-
-## Planned features
-
-* Better SCSS: Mixins to quickly build awesome responsive dropdowns.
+By default the plugin is configured to use the jQuery methods `slideDown()` and `slideUp()` to expand/collapse drop-downs. Setting the option **cssTransitions** to 'true' will disable the JS animations. This makes possible to implement the transitions directly with css. In fact, the plugin toggles the classes passed along with the options **dropdownExpandedClass**, **btnExpandedClass** and **menuExpandedClass**, when a dropdown is toggled.
 
 ## LICENSE
 

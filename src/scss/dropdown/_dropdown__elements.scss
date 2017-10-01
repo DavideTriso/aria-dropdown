@@ -1,0 +1,17 @@
+//----------------
+//ELEMENTS
+//----------------
+
+.dropdown__btn {
+  //
+}
+
+.dropdown__menu {
+  background-color: #fff;
+  @include border(#ccc, 0.3rem, 0.05rem);
+  @extend %border-style-solid;
+  @extend %position-absolute;
+  @extend %r-p_4;
+  min-width: 10rem;
+  @extend %z-index-100;
+}

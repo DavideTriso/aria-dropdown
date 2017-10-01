@@ -1,26 +1,84 @@
-.dropdown {
-  display: inline-block;
-  font-family: sans-serif;
-  position: relative;
+.dropdown__menu {
+  border-style: solid;
 }
 
-.dropdown__menu {
-  background-color: #454545;
-  border: 0.01rem solid #363636;
-  color: #fff;
-  position: absolute;
-  min-width: 10rem;
-  padding: 0.5rem;
-  z-index: 999;
+.dropdown {
+  display: inline-block;
+}
+
+.dropdown__menu_left {
+  left: 0;
 }
 
 .dropdown__menu_center {
   left: 50%;
-  -webkit-transform: translateX(-50%);
-      -ms-transform: translateX(-50%);
-          transform: translateX(-50%);
+}
+
+.dropdown__menu_right-most {
+  left: 100%;
+}
+
+.dropdown__menu {
+  position: absolute;
+}
+
+.dropdown {
+  position: relative;
 }
 
 .dropdown__menu_right {
   right: 0;
+}
+
+.dropdown__menu_left-most {
+  right: 100%;
+}
+
+.dropdown__menu {
+  z-index: 100;
+}
+
+/*
+.demo {
+    background-color: red;
+    @include mqMin(w4) {
+	    background-color: blue;
+	}
+}
+*/
+/*
+.demo {
+    background-color: red;
+    @include mqMax(w4) {
+	    background-color: blue;
+	}
+}
+*/
+/*
+.demo {
+    background-color: red;
+    @include mqRange(w2, w4) {
+	    background-color: blue;
+	}
+}
+*/
+.dropdown__menu {
+  padding: 0.8rem;
+}
+
+/*
+@include generateResponsiveGutter($guttersBreakpointsMap, $smallGuttersList, $containerClassName, $rowClassName, $columnClassName, $smallGutterModifierName);
+@include generateResponsiveGutter($guttersBreakpointsMap, $largeGuttersList, $containerClassName, $rowClassName, $columnClassName, $largeGutterModifierName);*/
+.dropdown__menu {
+  background-color: #fff;
+  border-color: #ccc;
+  border-radius: 0.3rem;
+  border-width: 0.05rem;
+  min-width: 10rem;
+}
+
+.dropdown__menu_center {
+  -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+          transform: translateX(-50%);
 }

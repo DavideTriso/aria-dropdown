@@ -1,0 +1,8 @@
+//----------------
+//BLOCK
+//----------------
+
+.dropdown {
+  @extend %display-inline-block;
+  @extend %position-relative;
+}
