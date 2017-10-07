@@ -1,7 +1,8 @@
 {
   "name": "t-aria-dropdown",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "license": "MIT",
+  "description": "HTML, CSS and JS UI-component for user-friendly and accessible dropdowns for scalable projects.",
   "repository": {
     "type": "git",
     "url": "git://github.com/davidetriso/aria-dropdown.git"

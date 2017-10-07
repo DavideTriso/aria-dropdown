@@ -19,7 +19,7 @@ Developed and tested with jQuery 3.2.1
 ## Cross-browser tests
 
 * Tested on **Google Chrome 57** / macOS Sierra 10.
-* Tested on **Google Chrome 60** / Windows 10. 
+* Tested on **Google Chrome 60** / Windows 10.
 
 ## Options
 
