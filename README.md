@@ -2,12 +2,13 @@
 
 ## About
 
-jQuery plugin for **user-friendly** and **accessible** dropdowns: **WAI ARIA 1.1** compliant. [Go to demo page](https://davidetriso.github.io/aria-dropdown/) or [check on npm](https://www.npmjs.com/package/t-aria-dropdown).
+HTML, CSS and JS UI-components for **user-friendly** and **accessible** dropdowns: **WAI ARIA 1.1** compliant. [Go to demo page](https://davidetriso.github.io/aria-dropdown/) or [check on npm](https://www.npmjs.com/package/t-aria-dropdown).
 
-* User friendly and accessible
-* Only 3KB (minified).
-* Runs in strict mode.
-* Compatible with amd and require.js
+* Developed following BEM methodology
+* User-friendly and accessible
+* Only 3KB JS (minified)
+* JS plugin runs in strict mode
+* Compatible with UMD
 
 ## Dependencies
 
@@ -18,6 +19,7 @@ Developed and tested with jQuery 3.2.1
 ## Cross-browser tests
 
 * Tested on **Google Chrome 57** / macOS Sierra 10.
+* Tested on **Google Chrome 60** / Windows 10. 
 
 ## Options
 
