@@ -25,9 +25,13 @@ SOFTWARE.
 
 (function (factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['jquery'], factory);
+    define(['jquery'], factory); //AMD
+  } else if (typeof exports === 'object') {
+    module.exports = factory(require('jquery')); //CommonJS
+  } else {
+    factory(jQuery, window);
   }
-}(function ($, window, document) {
+}(function ($, window) {
   'use strict';
   var pluginName = 'ariaDropdown', // the name of the plugin
     a = {
@@ -349,4 +353,4 @@ SOFTWARE.
     collapseZIndex: 1,
     cssTransitions: false
   };
-}(jQuery, window, document)));
+}));
