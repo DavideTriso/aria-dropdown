@@ -2,11 +2,13 @@
 
 ## About
 
-HTML, CSS and JS UI-components for **user-friendly** and **accessible** dropdowns: **WAI ARIA 1.1** compliant. [Go to demo page](https://davidetriso.github.io/aria-dropdown/) or [check on npm](https://www.npmjs.com/package/t-aria-dropdown).
+HTML, CSS and JS UI-components for **user-friendly** and **accessible** drop-downs: **WAI ARIA 1.1** compliant. [Go to demo page](https://davidetriso.github.io/aria-dropdown/) or [check on npm](https://www.npmjs.com/package/t-aria-dropdown).
 
 * Developed following BEM methodology
 * User-friendly and accessible
-* Only 3KB JS (minified)
+* Supports **nested drop-downs** (>= v2.0.0)
+* Supports **mouse** toggling (>= 2.0.0)
+* Only 5KB JS (minified)
 * JS plugin runs in strict mode
 * Compatible with UMD
 
