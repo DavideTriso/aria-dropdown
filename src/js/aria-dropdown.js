@@ -42,7 +42,9 @@ SOFTWARE.
       aHp: 'aria-haspopup',
       zIn: 'z-index',
       t: 'true',
-      f: 'false'
+      f: 'false',
+      dCl: 'data-ariadropdown-collapselabel',
+      dEl: 'data-ariadropdown-expandlabel'
     },
     count = 0,
     win = $(window);
@@ -63,6 +65,44 @@ SOFTWARE.
     return element.attr('id');
   }
 
+  /*
+   * get all parents dropdowns starting from a DOM elemnent and traversing up
+   */
+  function getParentDropdowns(target, dataKey) {
+    var dropdowns = [];
+
+    while (target[0].tagName !== 'BODY') {
+      target = target.parent();
+
+      if (target.data(dataKey)) {
+        dropdowns.push(target);
+      }
+    }
+    return dropdowns;
+  }
+
+  //get all child dropdowns starting from a DOM element
+  function getChildDropdowns(target, dataKey) {
+    while (target[0].tagName !== 'BODY' && target.data(dataKey) === undefined) {
+      target = target.parent();
+    }
+
+    var elements = target.find('*'),
+      elementsLength = elements.length,
+      dropdowns = [];
+
+    for (var i = 0; i < elementsLength; i++) {
+      var thisElement = elements.eq(i);
+      if (thisElement.data(dataKey) !== undefined) {
+        dropdowns.push(thisElement);
+      }
+    }
+
+    return dropdowns;
+  }
+
+
+
 
   //-----------------------------------------
   // The actual plugin constructor
@@ -70,10 +110,10 @@ SOFTWARE.
     var self = this;
     self.settings = $.extend({}, $.fn[pluginName].defaultSettings, userSettings);
     self.element = $(element); //the dropdown element
-    self.btn = self.element.find('> .' + self.settings.btnClass); //the dropdown button
-    self.menu = self.element.find('> .' + self.settings.menuClass); //the dropdown menu
+    self.btn = self.element.find('> .' + self.settings.btnClass).first(); //the dropdown button
+    self.menu = self.element.find('> .' + self.settings.menuClass).first(); //the dropdown menu
     self.elementStatus = false; //the status of the element (false = collapsed, true = expanded)
-
+    self.mouse = false; // track mouse events and block or enable expanding and collapsing of dropdowns with click: true when mousenter occurs, false when mouseleave occurs
 
     //call init
     self.init();
@@ -86,7 +126,8 @@ SOFTWARE.
         settings = self.settings,
         menu = self.menu,
         btn = self.btn,
-        element = self.element;
+        element = self.element,
+        dynamicBtnLabel = settings.dynamicBtnLabel;
 
 
       /*
@@ -104,7 +145,6 @@ SOFTWARE.
         .attr(a.aHi, a.t)
         .attr(a.aOw, self.btnId);
 
-
       //Set attributes on btn
       btn
         .attr(a.aHp, a.t)
@@ -117,8 +157,8 @@ SOFTWARE.
 
       /*
        * Register event listeners:
-       * 1: click.ariaDropdown -> click on window: collapse expanded dropdowns when
-       * user clicks everywhere in the window outside of the dropdown
+       * 1: click.ariaDropdown -> click on window: collapse dropdown if expanded  when
+       * user performs a click on the window
        */
       if (self.settings.collapseOnOutsideClick) {
         win.on('click.' + pluginName, function () {
@@ -126,23 +166,63 @@ SOFTWARE.
             self.slideUp(true);
           }
         });
+      } else {
+        /*
+         * If there is a parent dropdown with collapseOnOutsideClick set to true,
+         * we need to force collapse on this dropdown, even if collapseOnOutsideClick is set to false for this dropdown
+         */
+        win.on('click.' + pluginName, function () {
+          var dropdowns = getParentDropdowns(self.element, 'plugin_' + pluginName),
+            dropdownsLength = dropdowns.length,
+            index = 0,
+            thisDropdown = {},
+            closeMe = false;
+
+          if (dropdownsLength > 0) {
+            //check if one parent dropdown has collapseOnOutsideClick set to true ...
+            while (index < dropdownsLength && !closeMe) {
+              thisDropdown = dropdowns[index].data('plugin_' + pluginName);
+              if (thisDropdown.settings.collapseOnOutsideClick) {
+                closeMe = true;
+              }
+              index++;
+            }
+            //... if yes collapse this dropdown
+            if (closeMe) {
+              self.slideUp(true);
+            }
+          }
+        });
       }
 
       /*
-       * Prevent dropdown from being collapsed when click.ariaDropdown occurs
+       * 2: click.ariaDropdown -> click on dropdown: collapse or expand dropdowns on click +
+       * prevent dropdown from collapsing when click.ariaDropdown occurs
        * and target is a dropdown. Otherwise it would not be possible to expand a dropdown
        */
+
       element.on('click.' + pluginName, function (event) {
+
+        if (!self.mouse) {
+          self.toggle(true);
+        }
+
+        //stop propagation starting from element (on all parent dropdowns and the window the event is not triggered)
         event.stopPropagation();
-      });
 
+        //collapse all nested dropdowns
+        var target = $(event.target),
+          dropdowns = getChildDropdowns(target, 'plugin_' + pluginName), // ge all child dropdowns
+          dropdownsLength = dropdowns.length,
+          thisDropdown = {};
 
-      /*
-       * Register event listeners:
-       * 2: click.ariaDropdown -> click on dropdown: collapse or expand dropdowns on click
-       */
-      element.on('click.' + pluginName, function (event) {
-        self.toggle(true);
+        //close all nested dropdowns (when a dropdown get closed from user or user clicks on window, child dropdowns must be collapsed)
+        for (var i = 0; i < dropdownsLength; i++) {
+          thisDropdown = dropdowns[i].data('plugin_' + pluginName);
+          if (thisDropdown.elementStatus) {
+            thisDropdown.slideUp(true);
+          }
+        }
       });
 
 
@@ -152,23 +232,73 @@ SOFTWARE.
        * The option collapseOnMenuClick could be useful for implementing non-navigational dropdowns
        * (e.g. dropdowns in a toolbar) wich should collapse after a menu entry has been selected.
        */
-      if (!self.settings.collapseOnMenuClick) {
+
+      if (!settings.collapseOnMenuClick) {
         menu.on('click.' + pluginName, function (event) {
           event.stopPropagation();
         });
       }
 
+
       /*
        * Listen for custom event and collapse this dropdown if expanded
        * and expandOnlyOne is set to true.
-       * Argument 'element' is the dropdown expanded by user, wich should not be collapsed.
+       * Argument 'dropdown' is the dropdown expanded by user, which should not be collapsed.
        */
-      if (self.settings.expandOnlyOne) {
-        win.on(pluginName + '.slideDown', function (event, element) {
-          if (element !== self.element && self.elementStatus) {
-            self.slideUp();
+      if (settings.expandOnlyOne) {
+        win.on(pluginName + '.slideDown', function (event, el) {
+          var dropdowns = getChildDropdowns(element, 'plugin_' + pluginName), // ge all child dropdowns
+            dropdownsLength = dropdowns.length,
+            isChild = false,
+            index = 0;
+
+          //check if the expanded dropdown is child of this dropdown,
+          //if yes, do not collapse this dropdown
+          while (!isChild && index < dropdownsLength) {
+            if (el === dropdowns[index].data('plugin_' + pluginName)) {
+              isChild = true;
+            }
+            index++;
+          }
+
+          //Collapse this dropdown only if the other expanded dropdown was not a child
+          if (el !== element && !isChild && self.elementStatus) {
+            self.slideUp(true);
           }
         });
+      }
+
+
+
+      //Mouse events
+      if (settings.mouse) {
+        element.on('mouseenter.' + pluginName, function () {
+          self.mouse = true;
+
+          if (!self.elementStatus) {
+            self.slideDown(true);
+          }
+        });
+
+        element.on('mouseleave.' + pluginName, function () {
+          self.mouse = false;
+
+          if (self.elementStatus) {
+            self.slideUp(true);
+          }
+        });
+      }
+
+
+      //dynamic label
+      if (dynamicBtnLabel) {
+        if (typeof dynamicBtnLabel === 'string') {
+          self.dynamicBtnEl = btn.find(dynamicBtnLabel); // the child element of button where the label is injected
+        } else {
+          self.dynamicBtnEl = btn;
+        }
+        self.collapseLabel = btn.attr(a.dCl);
+        self.expandLabel = btn.attr(a.dEl);
       }
 
       //trigger init event on windown for developer to listen for
@@ -191,18 +321,24 @@ SOFTWARE.
        * This methods updates the attributes of the dialog
        * and removes the expanded classes from all elements.
        */
-      var self = this;
+      var self = this,
+        settings = self.settings;
 
       self.element
-        .removeClass(self.settings.dropdownExpandedClass);
+        .removeClass(settings.dropdownExpandedClass);
 
       self.btn
-        .removeClass(self.settings.btnExpandedClass)
+        .removeClass(settings.btnExpandedClass)
         .attr(a.aEx, a.f);
 
       self.menu
-        .removeClass(self.settings.menuExpandedClass)
+        .removeClass(settings.menuExpandedClass)
         .attr(a.aHi, a.t);
+
+      //dynamic btn label
+      if (self.dynamicBtnEl) {
+        self.dynamicBtnEl.text(self.expandLabel);
+      }
 
       //Update widget status
       self.elementStatus = false;
@@ -212,18 +348,24 @@ SOFTWARE.
        * This methods updates the attributes of the dialog
        * and adds the expanded classes to all elements.
        */
-      var self = this;
+      var self = this,
+        settings = self.settings;
 
       self.element
-        .addClass(self.settings.dropdownExpandedClass);
+        .addClass(settings.dropdownExpandedClass);
 
       self.btn
-        .addClass(self.settings.btnExpandedClass)
+        .addClass(settings.btnExpandedClass)
         .attr(a.aEx, a.t);
 
       self.menu
-        .addClass(self.settings.menuExpandedClass)
+        .addClass(settings.menuExpandedClass)
         .attr(a.aHi, a.f);
+
+      //dynamic btn label
+      if (self.dynamicBtnEl) {
+        self.dynamicBtnEl.text(self.collapseLabel);
+      }
 
       //Update widget status
       self.elementStatus = true;
@@ -296,6 +438,31 @@ SOFTWARE.
       //call the collapse method to update attributes and classes
       self.collapse();
     },
+    destroy: function () {
+      var self = this,
+        settings = self.settings;
+
+      //remove attributes and classes, unbind event listeners, remove jQuery data
+      self.btn
+        .removeAttr(a.aHp)
+        .removeAttr(a.aCs)
+        .removeAttr(a.aEx)
+        .removeClass(settings.btnExpandedClass);
+
+      self.menu
+        .removeAttr(a.aOw)
+        .removeAttr(a.aHi)
+        .removeClass(settings.menuExpandedClass)
+        .off('click.' + pluginName);
+
+      self.element
+        .removeClass(settings.dropdownExpandedClass)
+        .off('click.' + pluginName + ' mouseenter.' + pluginName + ' mouseleave.' + pluginName)
+        .removeData('plugin_' + pluginName);
+
+      win.trigger(pluginName + '.destroyed', [self]);
+
+    },
     methodCaller: function (methodName) {
       var self = this;
 
@@ -313,6 +480,8 @@ SOFTWARE.
           self.slideUp(true);
         }
         break;
+      case 'destroy':
+        self.destroy();
       }
     }
   });
@@ -351,6 +520,8 @@ SOFTWARE.
     expandOnlyOne: true,
     expandZIndex: 10,
     collapseZIndex: 1,
-    cssTransitions: false
+    cssTransitions: false,
+    mouse: false,
+    dynamicBtnLabel: false
   };
 }));

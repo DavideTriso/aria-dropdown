@@ -1,9 +1,13 @@
-@import '../../node_modules/t-css-framework/settings/import';
-@import '../../node_modules/t-css-framework/functions/import';
-@import '../../node_modules/t-css-framework/css-placeholders/import';
-@import '../../node_modules/t-css-framework/responsive-helpers/import';
-@import '../../node_modules/t-css-framework/ui-helpers/import';
-@import '../../node_modules/t-css-framework/grid/import';
+//import t-css-framework modules
+@import "../../node_modules/t-css-framework/src/settings/settings.import";
+@import "../../node_modules/t-css-framework/src/functions/functions.import";
+@import "../../node_modules/t-css-framework/src/helpers/helpers.import";
+
+//import control modules
+@import "dropdown/dropdown.variables";
 @import "dropdown/dropdown";
 @import "dropdown/dropdown__elements";
-@import "dropdown/dropdown_modifiers";
+@import "dropdown/modifiers/dropdown_nested";
+@import "dropdown/modifiers/dropdown_mega";
+@import "dropdown/modifiers/dropdown_right";
+@import "dropdown/modifiers/dropdown_center";

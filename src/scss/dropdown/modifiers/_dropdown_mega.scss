@@ -1,0 +1,8 @@
+.dropdown_mega {
+  display: block;
+  @include sizes((width:100%));
+
+  .dropdown__menu {
+    @include sizes((width:100%));
+  }
+}

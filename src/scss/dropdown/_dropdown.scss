@@ -1,8 +1,4 @@
-//----------------
-//BLOCK
-//----------------
-
 .dropdown {
-  @extend %display-inline-block;
-  @extend %position-relative;
+  display : inline-block;
+  position: relative;
 }

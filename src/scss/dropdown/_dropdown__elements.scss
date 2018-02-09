@@ -7,11 +7,9 @@
 }
 
 .dropdown__menu {
-  background-color: #fff;
-  @include border(#ccc, 0.3rem, 0.05rem);
-  @extend %border-style-solid;
-  @extend %position-absolute;
-  @extend %r-p_4;
-  min-width: 10rem;
-  @extend %z-index-100;
+  @include border($dropdown__menu--border);
+  box-shadow: $dropdown__menu--box-shadow;
+  @include background($dropdown__menu--background);
+  position  : absolute;
+  @include sizes($dropdown__menu--sizes);
 }

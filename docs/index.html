@@ -10,11 +10,19 @@
       max-width: 1000px;
       margin: auto;
       font-family: sans-serif;
-      text-align: center;
+      padding: 0 4rem;
+      background-color: #ccc;
+    }
+
+    section {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 0.3rem;
+      margin: 2rem 0;
     }
 
     h2 {
-      margin-top: 80px;
+      margin-top: 10px;
     }
 
     h4 {
@@ -28,8 +36,37 @@
       text-align: left;
     }
 
-    .dropdown {
-      margin: 0 1rem;
+    .dropdown__menu ul li {
+      margin: 0;
+      font-size: 0.8rem;
+    }
+
+    .dropdown__menu ul li span {
+      padding: 0.4rem 0.8rem;
+      display: block;
+    }
+
+    .dropdown__menu ul li:hover {
+      background-color: #f7f6f6;
+    }
+
+    .dropdown_nested {
+      padding: 0.4rem 0.8rem;
+    }
+
+    .dropdown_mega .dropdown__menu {
+      padding: 1rem;
+      display: flex;
+    }
+
+    .dropdown_mega .dropdown__menu div {
+      flex: 0 1 33.33%;
+    }
+
+
+    .dropdown_mega h3 {
+      padding: 0 0.3rem;
+      margin: 0.3rem 0;
     }
 
     .btn {
@@ -59,149 +96,180 @@
   <script>
     $(document).ready(function() {
       $('.dropdown-group-1').ariaDropdown({
-        collapseOnMenuClick: false,
+        collapseOnMenuClick: true,
         collapseOnOutsideClick: true,
         expandOnlyOne: true
       });
 
       $('.dropdown-group-2').ariaDropdown({
         collapseOnMenuClick: true,
-        collapseOnOutsideClick: false,
-        expandOnlyOne: false
+        collapseOnOutsideClick: true,
+        expandOnlyOne: true,
+        mouse: true
       });
 
-      $(window).on('ariaDropdown.slideUp', function(event, element) {
-        console.log(element);
+      $('.dropdown-group-3').ariaDropdown({
+        collapseOnMenuClick: true,
+        collapseOnOutsideClick: true,
+        expandOnlyOne: true,
+        dynamicBtnLabel: '> span'
       });
 
-      $(window).on('ariaDropdown.slideDown', function(event, element) {
-        console.log(element);
-      });
     });
   </script>
 </head>
 
 <body>
   <h1>Aria dropdown</h1>
-  <h2>Demo 1: dropdown positioning and behaviour</h2>
+  <section>
+    <h2>Demo 1: simple dropdown</h2>
+    <div class="dropdown dropdown-group-1">
+      <button type="button" class="dropdown__btn">Dropdown</button>
+      <div class="dropdown__menu">
+        <ul>
+          <li><span>Lorem ipsum</span></li>
+          <li><span>Dolor sit amet</span></li>
+          <li><span>Consectetur</span></li>
+          <li><span>Sed do eiusmod</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="dropdown dropdown_center dropdown-group-1">
+      <button type="button" class="dropdown__btn">Dropdown center</button>
+      <div class="dropdown__menu">
+        <ul>
+          <li><span>Lorem ipsum</span></li>
+          <li><span>Dolor sit amet</span></li>
+          <li><span>Consectetur</span></li>
+          <li><span>Sed do eiusmod</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-  <div class="dropdown dropdown-group-1">
-    <button type="button" class="dropdown__btn">Dropdown</button>
-    <div class="dropdown__menu" id="dropdown_menu--1">
-      <h4>Dropdown left</h4>
-      <ul>
-        <li>Link 1</li>
-        <li>Link 2</li>
-        <li>Link 3</li>
-        <li>Link 4</li>
-        <li>Link 5</li>
-      </ul>
+  <section>
+    <h2>Demo 2: nested dropdowns, expand on hover</h2>
+    <div class="dropdown dropdown-group-2">
+      <button type="button" class="dropdown__btn">Dropdown</button>
+      <div class="dropdown__menu">
+        <ul>
+          <li><span>Lorem ipsum</span></li>
+          <li><span>Dolor sit amet</span></li>
+          <li>
+            <div class="dropdown dropdown_nested dropdown-group-2">
+              <button type="button" class="dropdown__btn">Nested dropdown</button>
+              <div class="dropdown__menu">
+                <ul>
+                  <li><span>Lorem ipsum</span></li>
+                  <li><span>Dolor sit amet</span></li>
+                  <li><span>Consectetur</span></li>
+                  <li>
+                    <div class="dropdown dropdown_nested dropdown-group-2">
+                      <button type="button" class="dropdown__btn">Nested dropdown</button>
+                      <div class="dropdown__menu">
+                        <ul>
+                          <li><span>Lorem ipsum</span></li>
+                          <li><span>Dolor sit amet</span></li>
+                          <li><span>Consectetur</span></li>
+                          <li><span>Sed do eiusmod</span></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </li>
+          <li><span>Consectetur</span></li>
+        </ul>
+      </div>
     </div>
-  </div>
-  <div class="dropdown dropdown-group-1">
-    <button type="button" class="dropdown__btn">Dropdown</button>
-    <div class="dropdown__menu dropdown__menu_right">
-      <h4>Dropdown right</h4>
-      <ul>
-        <li>Link 1</li>
-        <li>Link 2</li>
-        <li>Link 3</li>
-        <li>Link 4</li>
-        <li>Link 5</li>
-      </ul>
+
+    <div class="dropdown dropdown-group-2">
+      <button type="button" class="dropdown__btn">Dropdown</button>
+      <div class="dropdown__menu">
+        <ul>
+          <li><span>Lorem ipsum</span></li>
+          <li><span>Dolor sit amet</span></li>
+          <li>
+            <div class="dropdown dropdown_nested dropdown_right dropdown-group-2">
+              <button type="button" class="dropdown__btn">Nested dropdown</button>
+              <div class="dropdown__menu">
+                <ul>
+                  <li><span>Lorem ipsum</span></li>
+                  <li><span>Dolor sit amet</span></li>
+                  <li><span>Consectetur</span></li>
+                </ul>
+              </div>
+            </div>
+          </li>
+          <li><span>Consectetur</span></li>
+        </ul>
+      </div>
     </div>
-  </div>
-  <div class="dropdown dropdown-group-2">
-    <button type="button" class="dropdown__btn">Dropdown</button>
-    <div class="dropdown__menu dropdown__menu_center">
-      <h4>Dropdown center</h4>
-      <ul>
-        <li>Link 1</li>
-        <li>Link 2</li>
-        <li>Link 3</li>
-        <li>Link 4</li>
-        <li>Link 5</li>
-      </ul>
-    </div>
-  </div>
-  <div class="dropdown dropdown-group-1">
-    <button type="button" class="dropdown__btn">Dropdown</button>
-    <div class="dropdown__menu dropdown__menu_right-most">
-      <h4>Dropdown right most</h4>
-      <ul>
-        <li>Link 1</li>
-        <li>Link 2</li>
-        <li>Link 3</li>
-        <li>Link 4</li>
-        <li>Link 5</li>
-      </ul>
-    </div>
-  </div>
-  <div class="dropdown dropdown-group-1">
-    <button type="button" class="dropdown__btn">Dropdown</button>
-    <div class="dropdown__menu dropdown__menu_left-most">
-      <h4>Dropdown left most</h4>
-      <ul>
-        <li>Link 1</li>
-        <li>Link 2</li>
-        <li>Link 3</li>
-        <li>Link 4</li>
-        <li>Link 5</li>
-      </ul>
-    </div>
-  </div>
-  <!-- FOR v2.0.0
-  <h2>Demo 2: nested dropdowns</h2>
-  <div class="dropdown dropdown_parent dropdown-group-3">
-    <button type="button" class="dropdown__btn">Dropdown</button>
-    <div class="dropdown__menu">
-      <div class="dropdown dropdown-group-4">
-        <button type="button" class="dropdown__btn">Nested dropdown</button>
-        <div class="dropdown__menu dropdown__menu_center">
-          <h4>Dropdown center</h4>
+  </section>
+
+
+  <section>
+    <h2>Demo 3: mega menu</h2>
+    <div class="dropdown dropdown_mega dropdown-group-1">
+      <button type="button" class="dropdown__btn">Dropdown</button>
+      <div class="dropdown__menu">
+        <div>
+          <h3>Lorem</h3>
           <ul>
-            <li>Link 1</li>
-            <li>Link 2</li>
-            <li>Link 3</li>
-            <li>Link 4</li>
-            <li>Link 5</li>
+            <li><span>Lorem ipsum</span></li>
+            <li><span>Dolor sit amet</span></li>
+            <li><span>Consectetur</span></li>
+            <li><span>Sed do eiusmod</span></li>
+            <li><span>Lorem ipsum</span></li>
+            <li><span>Dolor sit amet</span></li>
+            <li><span>Consectetur</span></li>
+            <li><span>Sed do eiusmod</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Ipsum</h3>
+          <ul>
+            <li><span>Lorem ipsum</span></li>
+            <li><span>Dolor sit amet</span></li>
+            <li><span>Consectetur</span></li>
+            <li><span>Sed do eiusmod</span></li>
+            <li><span>Lorem ipsum</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Dolor</h3>
+          <ul>
+            <li><span>Lorem ipsum</span></li>
+            <li><span>Dolor sit amet</span></li>
+            <li><span>Consectetur</span></li>
+            <li><span>Sed do eiusmod</span></li>
+            <li><span>Lorem ipsum</span></li>
+            <li><span>Dolor sit amet</span></li>
           </ul>
         </div>
       </div>
-      <div class="dropdown dropdown-group-4">
-        <button type="button" class="dropdown__btn">Nested dropdown</button>
-        <div class="dropdown__menu dropdown__menu_center">
-          <div class="dropdown dropdown-group-5">
-            <button type="button" class="dropdown__btn">Nested dropdown</button>
-            <div class="dropdown__menu dropdown__menu_left-most">
-              <h4>Dropdown center</h4>
-              <ul>
-                <li>Link 1</li>
-                <li>Link 2</li>
-                <li>Link 3</li>
-                <li>Link 4</li>
-                <li>Link 5</li>
-              </ul>
-            </div>
-          </div>
-          <div class="dropdown dropdown-group-5">
-            <button type="button" class="dropdown__btn">Nested dropdown</button>
-            <div class="dropdown__menu dropdown__menu_right-most">
-              <h4>Dropdown center</h4>
-              <ul>
-                <li>Link 1</li>
-                <li>Link 2</li>
-                <li>Link 3</li>
-                <li>Link 4</li>
-                <li>Link 5</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+    </div>
+  </section>
+
+
+  <section>
+    <h2>Demo 4: dynamic button label</h2>
+    <div class="dropdown dropdown-group-3">
+      <button type="button" class="dropdown__btn" data-ariadropdown-expandlabel="Open" data-ariadropdown-collapselabel="Close"><span>Open</span> menu</button>
+      <div class="dropdown__menu">
+        <ul>
+          <li><span>Lorem ipsum</span></li>
+          <li><span>Dolor sit amet</span></li>
+          <li><span>Consectetur</span></li>
+          <li><span>Sed do eiusmod</span></li>
+        </ul>
       </div>
     </div>
-  </div>
-  -->
+  </section>
+
+
   <a href="https://github.com/DavideTriso/aria-dropdown" class="btn">Check documentation</a>
 </body>
 

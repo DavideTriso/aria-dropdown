@@ -38,6 +38,8 @@ expandOnlyOne | true | bool | Automatically collapse dropdown if another dropdow
 cssTransitions | false | bool | Use css transitions to expand/collapse drop-downs instead of jQuery slide animation. Read section 'Using CSS transitions' for more informations
 expandZIndex | 10 | int | Z-index of dropdown during expand animation and while expanded.
 collapseZIndex | 1 | int | Z-index set to dropdown just before collapsing.
+mouse | false | bool | Toggle dropdown on `mousenter` and `mouseleave` (dropdown remains operable with keyboard)
+dynamicBtnLabel | false | bool or string (selector) | Define 'dynamic' labels for the dropdown button. Set the text for the expanded and collapsed status of a dropdown by adding the `data-ariadropdown-expandlabel` and `data-ariadropdown-collapselabel` attributes to the button and setting this option to true (or pass a selector - like `> span` - if you want to inject the text in a specific child element of the button).
 
 ## Installation
 
@@ -88,11 +90,13 @@ $('.dropdown').ariaDropdown({
 
 ## Methods:
 
-Methods can be called on an initialised dropdown with following syntax:
+Methods can be called on an initialised dropdown using following syntax:
 
 ````javascript
 $('#my-dropdown').ariaDropdown('methodName');
 ````
+
+The plugin supports following methods: **slideDown**, **slideUp**, **toggle** and **destroy**.
 
 ### slideDown
 
@@ -110,13 +114,22 @@ The method **slideUp** collapses a dropdown, if currently expanded.
 $('#my-dropdown').ariaDropdown('slideUp');
 ````
 
-### Toggle
+### toggle
 
 **Toggle** expands or collapses a dropdown based on the current state of the dropdown.
 
 ````javascript
 $('#my-dropdown').ariaDropdown('toggle');
 ````
+
+### destroy
+
+**Destroy** destroys a dropdown by removing the attributes, classes and event listeners added by the plugin. Also the jQuery data object is removed from the jQuery element's object.
+
+````javascript
+$('#my-dropdown').ariaDropdown('destroy');
+````
+
 
 ## Custom events
 
@@ -125,6 +138,8 @@ The plugin triggers following events:
 * **ariaDropdown.initialised** after a dropdown is initialised
 * **ariaDropdown.slideDown** when a dropdown is expanded
 * **ariaDropdown.slideUp** when a dropdown is collapsed
+* **ariaDropdown.destroyed** when a dropdown is destroyed
+
 
 The events are triggered on window and return the dropdown's data object as arguments.
 
