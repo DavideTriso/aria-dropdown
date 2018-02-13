@@ -272,6 +272,15 @@ SOFTWARE.
 
       //Mouse events
       if (settings.mouse) {
+        /*
+         * manage ghost events: if device is touch,
+         * always set self.mouse to false, 
+         * in order to not prevent click from closing dropdown
+         */
+        element.on('touchend.' + pluginName, function (event) {
+          self.mouse = false;
+        });
+
         element.on('mouseenter.' + pluginName, function () {
           self.mouse = true;
 
