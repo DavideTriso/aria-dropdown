@@ -157,7 +157,7 @@ SOFTWARE.
        * 1: click.ariaDropdown -> click on window: collapse dropdown if expanded  when
        * user performs a click on the window
        */
-      win.attr('tabindex', '-1');
+      $('body').attr('tabindex', '-1');
 
       if (self.settings.collapseOnOutsideClick) {
         win.on('click.' + pluginName, function () {
