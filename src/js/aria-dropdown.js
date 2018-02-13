@@ -29,9 +29,9 @@ SOFTWARE.
   } else if (typeof exports === 'object') {
     module.exports = factory(require('jquery')); //CommonJS
   } else {
-    factory(jQuery, window);
+    factory(jQuery, window, document);
   }
-}(function ($, window) {
+}(function ($, window, document) {
   'use strict';
   var pluginName = 'ariaDropdown', // the name of the plugin
     a = {
@@ -48,7 +48,6 @@ SOFTWARE.
     },
     count = 0,
     win = $(window);
-
 
   //-----------------------------------------
   //Private functions
@@ -101,7 +100,12 @@ SOFTWARE.
     return dropdowns;
   }
 
-
+  $(document).ready(function () {
+    //trigger click if device is touch (iOS fix)
+    win.on('touchend.' + pluginName, function (event) {
+      win.trigger('click.' + pluginName);
+    });
+  });
 
 
   //-----------------------------------------
@@ -160,8 +164,11 @@ SOFTWARE.
        * 1: click.ariaDropdown -> click on window: collapse dropdown if expanded  when
        * user performs a click on the window
        */
+
+
+
       if (self.settings.collapseOnOutsideClick) {
-        win.on('click.' + pluginName + ' touchstart.' + pluginName, function () {
+        win.on('click.' + pluginName, function () {
           if (self.elementStatus) {
             self.slideUp(true);
           }
@@ -171,7 +178,7 @@ SOFTWARE.
          * If there is a parent dropdown with collapseOnOutsideClick set to true,
          * we need to force collapse on this dropdown, even if collapseOnOutsideClick is set to false for this dropdown
          */
-        win.on('click.' + pluginName + ' touchstart.' + pluginName, function () {
+        win.on('click.' + pluginName, function () {
           var dropdowns = getParentDropdowns(self.element, 'plugin_' + pluginName),
             dropdownsLength = dropdowns.length,
             index = 0,
@@ -194,6 +201,7 @@ SOFTWARE.
           }
         });
       }
+
 
       /*
        * 2: click.ariaDropdown -> click on dropdown: collapse or expand dropdowns on click +
@@ -267,7 +275,6 @@ SOFTWARE.
           }
         });
       }
-
 
 
       //Mouse events
