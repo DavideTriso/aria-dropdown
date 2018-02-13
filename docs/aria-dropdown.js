@@ -161,7 +161,7 @@ SOFTWARE.
        * user performs a click on the window
        */
       if (self.settings.collapseOnOutsideClick) {
-        win.on('click.' + pluginName, function () {
+        win.on('click.' + pluginName + ' touchstart.' + pluginName, function () {
           if (self.elementStatus) {
             self.slideUp(true);
           }
@@ -274,7 +274,7 @@ SOFTWARE.
       if (settings.mouse) {
         /*
          * manage ghost events: if device is touch,
-         * always set self.mouse to false, 
+         * always set self.mouse to false,
          * in order to not prevent click from closing dropdown
          */
         element.on('touchend.' + pluginName, function (event) {
