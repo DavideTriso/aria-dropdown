@@ -165,7 +165,6 @@ SOFTWARE.
           if (self.elementStatus) {
             self.slideUp(true);
           }
-          alert('touch');
         });
       } else {
         /*
@@ -173,7 +172,6 @@ SOFTWARE.
          * we need to force collapse on this dropdown, even if collapseOnOutsideClick is set to false for this dropdown
          */
         win.on('click.' + pluginName + ' touchstart.' + pluginName, function () {
-          alert('touch');
           var dropdowns = getParentDropdowns(self.element, 'plugin_' + pluginName),
             dropdownsLength = dropdowns.length,
             index = 0,
