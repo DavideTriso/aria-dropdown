@@ -164,9 +164,13 @@ SOFTWARE.
        */
 
       //touch device workaround
+
+
       var touchStartTimeStamp = 0;
       win.on('touchstart.' + pluginName, function () {
         touchStartTimeStamp = new Date();
+        $('#touch').show().fadeOut(900);
+
       });
       //touch device workaround
 
