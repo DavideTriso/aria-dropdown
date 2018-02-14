@@ -176,7 +176,8 @@ SOFTWARE.
 
       if (self.settings.collapseOnOutsideClick) {
         win.on('click.' + pluginName + ' touchend.' + pluginName, function (event) {
-          if (event.type === 'touchend' && !isTouchClick(new Date(), touchStartTimeStamp)) {
+          if (event.type === 'touchend' && isTouchClick(new Date(), touchStartTimeStamp)) {
+            win.trigger('click.' + pluginName);
             return;
           }
 
@@ -190,7 +191,8 @@ SOFTWARE.
          * we need to force collapse on this dropdown, even if collapseOnOutsideClick is set to false for this dropdown
          */
         win.on('click.' + pluginName + ' touchend.' + pluginName, function () {
-          if (event.type === 'touchend' && !isTouchClick(new Date(), touchStartTimeStamp)) {
+          if (event.type === 'touchend' && isTouchClick(new Date(), touchStartTimeStamp)) {
+            win.trigger('click.' + pluginName);
             return;
           }
 
