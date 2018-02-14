@@ -115,7 +115,6 @@ SOFTWARE.
     self.btn = self.element.find('> .' + self.settings.btnClass).first(); //the dropdown button
     self.menu = self.element.find('> .' + self.settings.menuClass).first(); //the dropdown menu
     self.elementStatus = false; //the status of the element (false = collapsed, true = expanded)
-    self.mouse = false; // track mouse events and block or enable expanding and collapsing of dropdowns with click: true when mousenter occurs, false when mouseleave occurs
 
     //call init
     self.init();
@@ -169,18 +168,18 @@ SOFTWARE.
       var touchStartTimeStamp = 0;
       win.on('touchstart.' + pluginName, function () {
         touchStartTimeStamp = new Date();
-        $('#touch').show().fadeOut(900);
 
+      });
+      win.on('touchend.' + pluginName, function () {
+        console.log(isTouchClick(touchStartTimeStamp, new Date()));
+        if (isTouchClick(touchStartTimeStamp, new Date())) {
+          $('#touch').show().fadeOut(900);
+        }
       });
       //touch device workaround
 
       if (self.settings.collapseOnOutsideClick) {
-        win.on('click.' + pluginName + ' touchend.' + pluginName, function (event) {
-          if (event.type === 'touchend' && isTouchClick(new Date(), touchStartTimeStamp)) {
-            win.trigger('click.' + pluginName);
-            return;
-          }
-
+        win.on('click.' + pluginName, function (event) {
           if (self.elementStatus) {
             self.slideUp(true);
           }
@@ -190,12 +189,7 @@ SOFTWARE.
          * If there is a parent dropdown with collapseOnOutsideClick set to true,
          * we need to force collapse on this dropdown, even if collapseOnOutsideClick is set to false for this dropdown
          */
-        win.on('click.' + pluginName + ' touchend.' + pluginName, function () {
-          if (event.type === 'touchend' && isTouchClick(new Date(), touchStartTimeStamp)) {
-            win.trigger('click.' + pluginName);
-            return;
-          }
-
+        win.on('click.' + pluginName, function () {
           var dropdowns = getParentDropdowns(self.element, 'plugin_' + pluginName),
             dropdownsLength = dropdowns.length,
             index = 0,
@@ -228,9 +222,7 @@ SOFTWARE.
 
       element.on('click.' + pluginName, function (event) {
 
-        if (!self.mouse) {
-          self.toggle(true);
-        }
+        self.toggle(true);
 
         //stop propagation starting from element (on all parent dropdowns and the window the event is not triggered)
         event.stopPropagation();
@@ -259,10 +251,7 @@ SOFTWARE.
        */
 
       if (!settings.collapseOnMenuClick) {
-        menu.on('click.' + pluginName + ' touchend.' + pluginName, function (event) {
-          if (event.type === 'touchend' && isTouchClick(new Date(), touchStartTimeStamp)) {
-            return;
-          }
+        menu.on('click.' + pluginName, function (event) {
           event.stopPropagation();
         });
       }
@@ -295,33 +284,6 @@ SOFTWARE.
           }
         });
       }
-
-
-      //Mouse events
-      if (settings.mouse) {
-        element.on('mouseenter.' + pluginName + ' touchend.' + pluginName, function (event) {
-          if (event.type === 'touchend') {
-            self.mouse = false;
-            return;
-          }
-
-          self.mouse = true;
-
-          if (!self.elementStatus) {
-            self.slideDown(true);
-          }
-        });
-
-        element.on('mouseleave.' + pluginName, function (event) {
-
-          self.mouse = false;
-
-          if (self.elementStatus) {
-            self.slideUp(true);
-          }
-        });
-      }
-
 
       //dynamic label
       if (dynamicBtnLabel) {
@@ -554,7 +516,6 @@ SOFTWARE.
     expandZIndex: 10,
     collapseZIndex: 1,
     cssTransitions: false,
-    mouse: false,
     dynamicBtnLabel: false
   };
 }));
