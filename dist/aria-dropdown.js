@@ -48,7 +48,6 @@ SOFTWARE.
     },
     count = 0,
     win = $(window);
-
   //-----------------------------------------
   //Private functions
 
@@ -102,7 +101,7 @@ SOFTWARE.
 
   //touch is click or not
   function isTouchClick(startTime, endTime) {
-    return (endTime - startTime) < 300 ? true : false;
+    return (endTime - startTime) < 200 ? true : false;
   }
 
 
@@ -128,8 +127,13 @@ SOFTWARE.
         menu = self.menu,
         btn = self.btn,
         element = self.element,
-        dynamicBtnLabel = settings.dynamicBtnLabel;
+        dynamicBtnLabel = settings.dynamicBtnLabel,
+        body = $('body');
 
+
+      if (count === 0) {
+        body.attr('tabindex', '-1');
+      }
 
       /*
        * Set ids on menu and button if they do not have one yet
@@ -162,24 +166,8 @@ SOFTWARE.
        * user performs a click on the window
        */
 
-      //touch device workaround
-
-
-      var touchStartTimeStamp = 0;
-      win.on('touchstart.' + pluginName, function () {
-        touchStartTimeStamp = new Date();
-
-      });
-      win.on('touchend.' + pluginName, function () {
-        console.log(isTouchClick(touchStartTimeStamp, new Date()));
-        if (isTouchClick(touchStartTimeStamp, new Date())) {
-          $('#touch').show().fadeOut(900);
-        }
-      });
-      //touch device workaround
-
       if (self.settings.collapseOnOutsideClick) {
-        win.on('click.' + pluginName, function (event) {
+        body.on('click.' + pluginName, function (event) {
           if (self.elementStatus) {
             self.slideUp(true);
           }
@@ -189,7 +177,7 @@ SOFTWARE.
          * If there is a parent dropdown with collapseOnOutsideClick set to true,
          * we need to force collapse on this dropdown, even if collapseOnOutsideClick is set to false for this dropdown
          */
-        win.on('click.' + pluginName, function () {
+        body.on('click.' + pluginName, function () {
           var dropdowns = getParentDropdowns(self.element, 'plugin_' + pluginName),
             dropdownsLength = dropdowns.length,
             index = 0,
