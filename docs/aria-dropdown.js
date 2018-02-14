@@ -100,6 +100,11 @@ SOFTWARE.
     return dropdowns;
   }
 
+  //touch is click or not
+  function isTouchClick(startTime, endTime) {
+    return (endTime - startTime) < 300 ? true : false;
+  }
+
 
   //-----------------------------------------
   // The actual plugin constructor
@@ -158,8 +163,19 @@ SOFTWARE.
        * user performs a click on the window
        */
 
+      //touch device workaround
+      var touchStartTimeStamp = 0;
+      win.on('touchstart.' + pluginName, function () {
+        touchStartTimeStamp = new Date();
+      });
+      //touch device workaround
+
       if (self.settings.collapseOnOutsideClick) {
-        win.on('click.' + pluginName, function () {
+        win.on('click.' + pluginName + ' touchend.' + pluginName, function (event) {
+          if (event.type === 'touchend' && isTouchClick(new Date(), touchStartTimeStamp)) {
+            return;
+          }
+
           if (self.elementStatus) {
             self.slideUp(true);
           }
@@ -169,7 +185,11 @@ SOFTWARE.
          * If there is a parent dropdown with collapseOnOutsideClick set to true,
          * we need to force collapse on this dropdown, even if collapseOnOutsideClick is set to false for this dropdown
          */
-        win.on('click.' + pluginName, function () {
+        win.on('click.' + pluginName + ' touchend.' + pluginName, function () {
+          if (event.type === 'touchend' && isTouchClick(new Date(), touchStartTimeStamp)) {
+            return;
+          }
+
           var dropdowns = getParentDropdowns(self.element, 'plugin_' + pluginName),
             dropdownsLength = dropdowns.length,
             index = 0,
@@ -233,7 +253,10 @@ SOFTWARE.
        */
 
       if (!settings.collapseOnMenuClick) {
-        menu.on('click.' + pluginName, function (event) {
+        menu.on('click.' + pluginName + ' touchend.' + pluginName, function (event) {
+          if (event.type === 'touchend' && isTouchClick(new Date(), touchStartTimeStamp)) {
+            return;
+          }
           event.stopPropagation();
         });
       }
@@ -270,16 +293,12 @@ SOFTWARE.
 
       //Mouse events
       if (settings.mouse) {
-        /*
-         * manage ghost events: if device is touch,
-         * always set self.mouse to false,
-         * in order to not prevent click from closing dropdown
-         */
-        element.on('touchend.' + pluginName, function (event) {
-          self.mouse = false;
-        });
+        element.on('mouseenter.' + pluginName + ' touchend.' + pluginName, function (event) {
+          if (event.type === 'touchend') {
+            self.mouse = false;
+            return;
+          }
 
-        element.on('mouseenter.' + pluginName, function () {
           self.mouse = true;
 
           if (!self.elementStatus) {
@@ -287,7 +306,8 @@ SOFTWARE.
           }
         });
 
-        element.on('mouseleave.' + pluginName, function () {
+        element.on('mouseleave.' + pluginName, function (event) {
+
           self.mouse = false;
 
           if (self.elementStatus) {
