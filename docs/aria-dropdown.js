@@ -150,7 +150,9 @@ SOFTWARE.
 
       win.on('touchend.' + pluginName, function (event) {
         if (isTouchClick(touchstartTimeStamp, event.timeStamp, touchmoveTimeStamp)) {
-          $(event.target).trigger('click.' + pluginName);
+          if (self.element.has(event.target).length === 0) {
+            $(self.target).trigger('click.' + pluginName);
+          }
         }
       });
       //END DETECT TAP / TOUCH
