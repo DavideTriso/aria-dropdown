@@ -102,6 +102,13 @@ SOFTWARE.
   }
 
 
+  function isTouchClick(touchstartTimeStamp, touchendTimeStamp, touchmoveTimeStamp) {
+    if (touchmoveTimeStamp < touchstartTimeStamp) {
+      console.log('tap')
+      return touchendTimeStamp - touchstartTimeStamp < 300 ? true : false;
+    }
+    return false;
+  }
 
 
   //-----------------------------------------
@@ -129,6 +136,35 @@ SOFTWARE.
         element = self.element,
         dynamicBtnLabel = settings.dynamicBtnLabel;
 
+
+      //DETECT TAP / TOUCH
+      var touchstartTimeStamp,
+        touchmoveTimeStamp = 0;
+
+      win.on('touchstart.' + pluginName, function (event) {
+        event.preventDefault();
+        touchstartTimeStamp = event.timeStamp;
+      });
+
+      win.on('touchmove.' + pluginName, function (event) {
+        event.preventDefault();
+        touchmoveTimeStamp = event.timeStamp;
+      });
+
+      win.on('touchend.' + pluginName, function (event) {
+        event.preventDefault();
+
+        if (isTouchClick(touchstartTimeStamp, event.timeStamp, touchmoveTimeStamp)) {
+          $(event.target).trigger('simulatedClick.' + pluginName);
+        }
+      });
+      //END DETECT TAP / TOUCH
+
+      //DETECT CLICK
+      win.on('click.' + pluginName, function (event) {
+        $(event.target).trigger('simulatedClick.' + pluginName);
+      });
+      //END DETECT CLICK
 
       /*
        * Set ids on menu and button if they do not have one yet
@@ -161,7 +197,7 @@ SOFTWARE.
        * user performs a click on the window
        */
       if (self.settings.collapseOnOutsideClick) {
-        win.on('click.' + pluginName, function () {
+        win.on('simulatedClick.' + pluginName, function () {
           if (self.elementStatus) {
             self.slideUp(true);
           }
@@ -171,7 +207,7 @@ SOFTWARE.
          * If there is a parent dropdown with collapseOnOutsideClick set to true,
          * we need to force collapse on this dropdown, even if collapseOnOutsideClick is set to false for this dropdown
          */
-        win.on('click.' + pluginName, function () {
+        win.on('simulatedClick.' + pluginName, function () {
           var dropdowns = getParentDropdowns(self.element, 'plugin_' + pluginName),
             dropdownsLength = dropdowns.length,
             index = 0,
@@ -201,7 +237,7 @@ SOFTWARE.
        * and target is a dropdown. Otherwise it would not be possible to expand a dropdown
        */
 
-      element.on('click.' + pluginName, function (event) {
+      element.on('simulatedClick.' + pluginName, function (event) {
 
         if (!self.mouse) {
           self.toggle(true);
@@ -234,7 +270,7 @@ SOFTWARE.
        */
 
       if (!settings.collapseOnMenuClick) {
-        menu.on('click.' + pluginName, function (event) {
+        menu.on('simulatedClick.' + pluginName, function (event) {
           event.stopPropagation();
         });
       }
@@ -274,12 +310,14 @@ SOFTWARE.
       if (settings.mouse) {
         /*
          * manage ghost events: if device is touch,
-         * always set self.mouse to false, 
+         * always set self.mouse to false,
          * in order to not prevent click from closing dropdown
          */
+        //START
         element.on('touchend.' + pluginName, function (event) {
           self.mouse = false;
         });
+        //END
 
         element.on('mouseenter.' + pluginName, function () {
           self.mouse = true;
