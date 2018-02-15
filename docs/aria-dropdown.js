@@ -104,7 +104,6 @@ SOFTWARE.
 
   function isTouchClick(touchstartTimeStamp, touchendTimeStamp, touchmoveTimeStamp) {
     if (touchmoveTimeStamp < touchstartTimeStamp) {
-      console.log('tap')
       return touchendTimeStamp - touchstartTimeStamp < 300 ? true : false;
     }
     return false;
@@ -142,29 +141,20 @@ SOFTWARE.
         touchmoveTimeStamp = 0;
 
       win.on('touchstart.' + pluginName, function (event) {
-        event.preventDefault();
         touchstartTimeStamp = event.timeStamp;
       });
 
       win.on('touchmove.' + pluginName, function (event) {
-        event.preventDefault();
         touchmoveTimeStamp = event.timeStamp;
       });
 
       win.on('touchend.' + pluginName, function (event) {
-        event.preventDefault();
-
         if (isTouchClick(touchstartTimeStamp, event.timeStamp, touchmoveTimeStamp)) {
-          $(event.target).trigger('simulatedClick.' + pluginName);
+          $(event.target).trigger('click.' + pluginName);
         }
       });
       //END DETECT TAP / TOUCH
 
-      //DETECT CLICK
-      win.on('click.' + pluginName, function (event) {
-        $(event.target).trigger('simulatedClick.' + pluginName);
-      });
-      //END DETECT CLICK
 
       /*
        * Set ids on menu and button if they do not have one yet
@@ -197,7 +187,7 @@ SOFTWARE.
        * user performs a click on the window
        */
       if (self.settings.collapseOnOutsideClick) {
-        win.on('simulatedClick.' + pluginName, function () {
+        win.on('click.' + pluginName, function (event) {
           if (self.elementStatus) {
             self.slideUp(true);
           }
@@ -207,7 +197,7 @@ SOFTWARE.
          * If there is a parent dropdown with collapseOnOutsideClick set to true,
          * we need to force collapse on this dropdown, even if collapseOnOutsideClick is set to false for this dropdown
          */
-        win.on('simulatedClick.' + pluginName, function () {
+        win.on('click.' + pluginName, function () {
           var dropdowns = getParentDropdowns(self.element, 'plugin_' + pluginName),
             dropdownsLength = dropdowns.length,
             index = 0,
@@ -237,7 +227,7 @@ SOFTWARE.
        * and target is a dropdown. Otherwise it would not be possible to expand a dropdown
        */
 
-      element.on('simulatedClick.' + pluginName, function (event) {
+      element.on('click.' + pluginName, function (event) {
 
         if (!self.mouse) {
           self.toggle(true);
@@ -270,7 +260,7 @@ SOFTWARE.
        */
 
       if (!settings.collapseOnMenuClick) {
-        menu.on('simulatedClick.' + pluginName, function (event) {
+        menu.on('click.' + pluginName, function (event) {
           event.stopPropagation();
         });
       }
