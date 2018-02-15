@@ -151,7 +151,7 @@ SOFTWARE.
       win.on('touchend.' + pluginName, function (event) {
         if (isTouchClick(touchstartTimeStamp, event.timeStamp, touchmoveTimeStamp)) {
           if (self.element.has(event.target).length === 0) {
-            $(self.target).trigger('click.' + pluginName);
+            win.trigger('click.' + pluginName);
           }
         }
       });
