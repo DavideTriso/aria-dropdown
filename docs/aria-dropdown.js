@@ -101,14 +101,14 @@ SOFTWARE.
     return dropdowns;
   }
 
-
-  function isTouchClick(touchstartTimeStamp, touchendTimeStamp, touchmoveTimeStamp) {
-    if (touchmoveTimeStamp < touchstartTimeStamp) {
-      return touchendTimeStamp - touchstartTimeStamp < 300 ? true : false;
+  /*
+    function isTouchClick(touchstartTimeStamp, touchendTimeStamp, touchmoveTimeStamp) {
+      if (touchmoveTimeStamp < touchstartTimeStamp) {
+        return touchendTimeStamp - touchstartTimeStamp < 300 ? true : false;
+      }
+      return false;
     }
-    return false;
-  }
-
+  */
 
   //-----------------------------------------
   // The actual plugin constructor
@@ -134,29 +134,6 @@ SOFTWARE.
         btn = self.btn,
         element = self.element,
         dynamicBtnLabel = settings.dynamicBtnLabel;
-
-
-      //DETECT TAP / TOUCH
-      var touchstartTimeStamp,
-        touchmoveTimeStamp = 0;
-
-      win.on('touchstart.' + pluginName, function (event) {
-        touchstartTimeStamp = event.timeStamp;
-      });
-
-      win.on('touchmove.' + pluginName, function (event) {
-        touchmoveTimeStamp = event.timeStamp;
-      });
-
-      win.on('touchend.' + pluginName, function (event) {
-        if (isTouchClick(touchstartTimeStamp, event.timeStamp, touchmoveTimeStamp)) {
-          if (self.element.has(event.target).length === 0) {
-            win.trigger('click.' + pluginName);
-          }
-        }
-      });
-      //END DETECT TAP / TOUCH
-
 
       /*
        * Set ids on menu and button if they do not have one yet
