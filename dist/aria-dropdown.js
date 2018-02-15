@@ -29,9 +29,9 @@ SOFTWARE.
   } else if (typeof exports === 'object') {
     module.exports = factory(require('jquery')); //CommonJS
   } else {
-    factory(jQuery, window, document);
+    factory(jQuery, window);
   }
-}(function ($, window, document) {
+}(function ($, window) {
   'use strict';
   var pluginName = 'ariaDropdown', // the name of the plugin
     a = {
@@ -48,6 +48,8 @@ SOFTWARE.
     },
     count = 0,
     win = $(window);
+
+
   //-----------------------------------------
   //Private functions
 
@@ -99,10 +101,7 @@ SOFTWARE.
     return dropdowns;
   }
 
-  //touch is click or not
-  function isTouchClick(startTime, endTime) {
-    return (endTime - startTime) < 200 ? true : false;
-  }
+
 
 
   //-----------------------------------------
@@ -114,6 +113,7 @@ SOFTWARE.
     self.btn = self.element.find('> .' + self.settings.btnClass).first(); //the dropdown button
     self.menu = self.element.find('> .' + self.settings.menuClass).first(); //the dropdown menu
     self.elementStatus = false; //the status of the element (false = collapsed, true = expanded)
+    self.mouse = false; // track mouse events and block or enable expanding and collapsing of dropdowns with click: true when mousenter occurs, false when mouseleave occurs
 
     //call init
     self.init();
@@ -127,13 +127,8 @@ SOFTWARE.
         menu = self.menu,
         btn = self.btn,
         element = self.element,
-        dynamicBtnLabel = settings.dynamicBtnLabel,
-        body = $('body');
+        dynamicBtnLabel = settings.dynamicBtnLabel;
 
-
-      if (count === 0) {
-        body.attr('tabindex', '-1');
-      }
 
       /*
        * Set ids on menu and button if they do not have one yet
@@ -165,9 +160,8 @@ SOFTWARE.
        * 1: click.ariaDropdown -> click on window: collapse dropdown if expanded  when
        * user performs a click on the window
        */
-
       if (self.settings.collapseOnOutsideClick) {
-        body.on('click.' + pluginName, function (event) {
+        win.on('click.' + pluginName, function () {
           if (self.elementStatus) {
             self.slideUp(true);
           }
@@ -177,7 +171,7 @@ SOFTWARE.
          * If there is a parent dropdown with collapseOnOutsideClick set to true,
          * we need to force collapse on this dropdown, even if collapseOnOutsideClick is set to false for this dropdown
          */
-        body.on('click.' + pluginName, function () {
+        win.on('click.' + pluginName, function () {
           var dropdowns = getParentDropdowns(self.element, 'plugin_' + pluginName),
             dropdownsLength = dropdowns.length,
             index = 0,
@@ -201,7 +195,6 @@ SOFTWARE.
         });
       }
 
-
       /*
        * 2: click.ariaDropdown -> click on dropdown: collapse or expand dropdowns on click +
        * prevent dropdown from collapsing when click.ariaDropdown occurs
@@ -210,7 +203,9 @@ SOFTWARE.
 
       element.on('click.' + pluginName, function (event) {
 
-        self.toggle(true);
+        if (!self.mouse) {
+          self.toggle(true);
+        }
 
         //stop propagation starting from element (on all parent dropdowns and the window the event is not triggered)
         event.stopPropagation();
@@ -272,6 +267,37 @@ SOFTWARE.
           }
         });
       }
+
+
+
+      //Mouse events
+      if (settings.mouse) {
+        /*
+         * manage ghost events: if device is touch,
+         * always set self.mouse to false, 
+         * in order to not prevent click from closing dropdown
+         */
+        element.on('touchend.' + pluginName, function (event) {
+          self.mouse = false;
+        });
+
+        element.on('mouseenter.' + pluginName, function () {
+          self.mouse = true;
+
+          if (!self.elementStatus) {
+            self.slideDown(true);
+          }
+        });
+
+        element.on('mouseleave.' + pluginName, function () {
+          self.mouse = false;
+
+          if (self.elementStatus) {
+            self.slideUp(true);
+          }
+        });
+      }
+
 
       //dynamic label
       if (dynamicBtnLabel) {
@@ -504,6 +530,7 @@ SOFTWARE.
     expandZIndex: 10,
     collapseZIndex: 1,
     cssTransitions: false,
+    mouse: false,
     dynamicBtnLabel: false
   };
 }));

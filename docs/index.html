@@ -91,12 +91,6 @@
     .btn:avtive {
       background-color: #6216c9;
     }
-
-    #touch {
-      position: fixed;
-      display: none;
-      bottom: 0;
-    }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="aria-dropdown.js"></script>
@@ -112,6 +106,7 @@
         collapseOnMenuClick: true,
         collapseOnOutsideClick: true,
         expandOnlyOne: true,
+        mouse: true
       });
 
       $('.dropdown-group-3').ariaDropdown({
@@ -274,9 +269,7 @@
       </div>
     </div>
   </section>
-  <p id="touch">
-    Touched
-  </p>
+
 
   <a href="https://github.com/DavideTriso/aria-dropdown" class="btn">Check documentation</a>
 </body>
