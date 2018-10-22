@@ -1,0 +1,11 @@
+.dropdown_responsive {
+    @include mqMax($dropdownResponsiveBreakpoint) {
+        width: 100%;
+        display: block;
+        .dropdown__menu {
+            position: static;
+            transform: none;
+            width: 100%;
+        }
+    }
+}

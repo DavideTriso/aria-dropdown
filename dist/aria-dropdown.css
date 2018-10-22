@@ -41,6 +41,9 @@
 .dropdown_nested .dropdown__menu {
   left: 100%;
   top: 0;
+  -webkit-transform: translateX(0);
+      -ms-transform: translateX(0);
+          transform: translateX(0);
 }
 
 .dropdown_mega {
@@ -60,4 +63,18 @@
   -webkit-transform: translateX(-50%);
       -ms-transform: translateX(-50%);
           transform: translateX(-50%);
+}
+
+@media screen and (max-width: 767px) {
+  .dropdown_responsive {
+    width: 100%;
+    display: block;
+  }
+  .dropdown_responsive .dropdown__menu {
+    position: static;
+    -webkit-transform: none;
+        -ms-transform: none;
+            transform: none;
+    width: 100%;
+  }
 }

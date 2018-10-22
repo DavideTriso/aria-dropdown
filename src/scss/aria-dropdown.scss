@@ -2,8 +2,8 @@
 @import "../../node_modules/t-css-framework/src/settings/settings.import";
 @import "../../node_modules/t-css-framework/src/functions/functions.import";
 @import "../../node_modules/t-css-framework/src/helpers/helpers.import";
-
 //import control modules
+@import"aria-dropdown.settings.scss";
 @import "dropdown/dropdown.variables";
 @import "dropdown/dropdown";
 @import "dropdown/dropdown__elements";
@@ -11,3 +11,4 @@
 @import "dropdown/modifiers/dropdown_mega";
 @import "dropdown/modifiers/dropdown_right";
 @import "dropdown/modifiers/dropdown_center";
+@import "dropdown/modifiers/dropdown_responsive";
