@@ -54,11 +54,11 @@
   width: 100%;
 }
 
-.dropdown_right .dropdown__menu {
+.dropdown_right > .dropdown__menu {
   left: -100%;
 }
 
-.dropdown_center .dropdown__menu {
+.dropdown_center > .dropdown__menu {
   left: 50%;
   -webkit-transform: translateX(-50%);
       -ms-transform: translateX(-50%);
