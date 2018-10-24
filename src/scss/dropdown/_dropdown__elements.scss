@@ -1,15 +1,14 @@
 //----------------
 //ELEMENTS
 //----------------
-
 .dropdown__btn {
-  //
+    cursor: pointer;
 }
 
 .dropdown__menu {
-  @include border($dropdown__menu--border);
-  box-shadow: $dropdown__menu--box-shadow;
-  @include background($dropdown__menu--background);
-  position  : absolute;
-  @include sizes($dropdown__menu--sizes);
+    @include border($dropdown__menu--border);
+    box-shadow: $dropdown__menu--box-shadow;
+    @include background($dropdown__menu--background);
+    position: absolute;
+    @include sizes($dropdown__menu--sizes);
 }

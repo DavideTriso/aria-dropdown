@@ -5,7 +5,6 @@ var gulp = require('gulp'),
   cssnano = require('gulp-cssnano'),
   uglify = require('gulp-uglify'),
   rename = require('gulp-rename'),
-  concat = require('gulp-concat'),
   notify = require('gulp-notify');
 
 //SCSS -> CSS
@@ -21,9 +20,6 @@ gulp.task('scssDocs', function (done) {
   done();
 });
 
-//Task alias
-gulp.task('scss', gulp.parallel('scssDist', 'scssDocs'));
-
 //JS -> JS + MIN.JS
 //Put a copy and a minified version of JS file in 'dist' folder
 gulp.task('jsDist', function (done) {
@@ -37,8 +33,6 @@ gulp.task('jsDocs', function (done) {
   done();
 });
 
-//Task alias
-gulp.task('js', gulp.parallel('jsDist', 'jsDocs'));
 
 //HTML -> HTML
 //Put a copy of HTML file to 'dist' folder
@@ -47,24 +41,22 @@ gulp.task('htmlDist', function (done) {
   done();
 });
 
-gulp.task('html', gulp.parallel('htmlDist'));
 
 //WATCH TASKS
-
 gulp.task('watchScss', function () {
-  gulp.watch('src/scss/**/*.scss', gulp.parallel('scss'));
+  gulp.watch('src/scss/**/*.scss', gulp.parallel('scssDocs', 'scssDist'));
 });
 
 gulp.task('watchJS', function () {
-  gulp.watch('src/js/*.js', gulp.parallel('js'));
+  gulp.watch('src/js/*.js', gulp.series('jsDocs', 'jsDist'));
 });
 
 gulp.task('watchHTML', function () {
-  gulp.watch('src/html/*.html', gulp.parallel('html'));
+  gulp.watch('src/html/*.html', gulp.series('htmlDocs'));
 });
 
 gulp.task('watchAll', function () {
-  gulp.watch('src/js/*.js', gulp.parallel('js'));
-  gulp.watch('src/scss/**/*.scss', gulp.parallel('scss'));
-  gulp.watch('src/html/*.html', gulp.parallel('html'));
+  gulp.watch('src/js/*.js', gulp.parallel('jsDist', 'jsDocs'));
+  gulp.watch('src/scss/**/*.scss', gulp.parallel('scssDist', 'scssDocs'));
+  gulp.watch('src/html/*.html', gulp.parallel('htmlDist'));
 });
